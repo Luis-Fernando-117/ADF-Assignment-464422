@@ -2,7 +2,7 @@ f_test_API <- function(use_header) {
   # this function tests if the bearer token allows a successful GET request
   
   params <- list(user.fields = 'description')
-  handle <- 'Luis-Fer-117'
+  handle <- 'Ana_Martinovici'
   url_handle <- paste0('https://api.twitter.com/2/users/by?usernames=', handle)
   response <-	httr::GET(url = url_handle,
                         config = httr::add_headers(.headers = use_header),
