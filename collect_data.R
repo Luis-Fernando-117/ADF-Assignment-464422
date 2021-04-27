@@ -66,7 +66,7 @@ f_test_API(use_header = headers)
 
 ################################################
 
-# --------- SECTION 2 : Analyses ------------
+# --------- SECTION 2 : Collect Data  ------------
 
 ################################################
 
@@ -146,12 +146,16 @@ f_test_API(use_header = headers)
 # Coordinates
 # Rotteram coordinates 51.9244° N, 4.4777° E
   rdam_geocode <- '51.9244,4.4777,10km'
+# Geocode Mexico City
   mexicocity_geocode <- "19.432608,-99.133208,30km"
 
 # Tweet Search
   l.tweets <- searchTwitter("corrupcion", n = ntweets_to_extract, 
                             lang = language, geocode = mexicocity_geocode)
   df.tweets <- twListToDF(l.tweets)
+  
+# Save tweets
+  save(df.tweets, file = "test-tweets-step3.RData")
 
 
 
