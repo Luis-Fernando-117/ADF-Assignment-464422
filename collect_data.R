@@ -2,6 +2,7 @@
 library("httr")
 library("jsonlite")
 library("tidyverse")
+
 # add any other packages you might need to use
 
 # -------- Section 1: Test API --------
@@ -15,10 +16,13 @@ library("tidyverse")
 
 # if you have correctly set your bearer token as an environment variable, 
 # this retrieved the value of the token and assigns it to "bearer_token"
-bearer_token <- Sys.getenv("BEARER_TOKEN")
+bearer_token <- Sys.getenv("
+AAAAAAAAAAAAAAAAAAAAAPxqOgEAAAAAWSDCu%2B1SO943pQCTHA1nM3GAHHQ%3DtoLduLkkrxZeIMgYJ9pf5kcEiRaNrgyuTLZyJWIzPVgTF1EZK0
+")
 # if you didn't manage to create the environment variable, then copy paste the 
 # token below and comment out the line
-# bearer_token <- "CopyPasteYourTokenHere"
+bearer_token <- "AAAAAAAAAAAAAAAAAAAAAPxqOgEAAAAAWSDCu%2B1SO943pQCTHA1nM3GAHHQ%3DtoLduLkkrxZeIMgYJ9pf5kcEiRaNrgyuTLZyJWIzPVgTF1EZK0
+"
 
 # the authorization header is composed of the text Bearer + space + the token
 headers <- c(Authorization = paste0('Bearer ', bearer_token))
@@ -27,7 +31,7 @@ headers <- c(Authorization = paste0('Bearer ', bearer_token))
 # same as the working directory
 # f_aux_functions.R contains two functions that you can use to test the token
 # source("f_aux_functions.R") brings these in the current workspace 
-source("f_aux_functions.R")
+source("f_aux_functions_Luis.R")
 # you should now see f_test_API and f_test_token_API in the Environment pane
 # type ?source in the console to learn more
 
