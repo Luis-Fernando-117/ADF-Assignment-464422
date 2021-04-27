@@ -70,8 +70,10 @@ f_test_API(use_header = headers)
 
 ################################################
 
-# ---  TEST DATASET FOR STEP 3 --
+#### TEST DATASET FOR STEP 3 ###
 # just 100 observations but that are representative of the tweets I'll analyze
+
+# --- Preparations for Data extraction ---
 
 # Set up app and keys
   api_key <-      "aOKiqkLHtCn4a7JSURREZ3mzX"
