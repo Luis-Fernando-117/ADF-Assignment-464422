@@ -19,3 +19,12 @@ information from Twitter that I got from "collect_data.R" script.
 The output should be another .RData file with the preprocessed data that has the data converted
 into data frames ready to analyze.
 
+search_tweets = returns twitter statuses from tweets matching certian words or strings of the past 6-9 days 
+
+SearchTwitter = gives you tweets that contain certain words or phrases
+
+Documentation of search_tweets
+#https://www.rdocumentation.org/packages/rtweet/versions/0.7.0/topics/search_tweets
+
+Documentation of search_twitter
+https://www.rdocumentation.org/packages/twitteR/versions/1.1.9/topics/searchTwitter

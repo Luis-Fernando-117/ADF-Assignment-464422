@@ -2,6 +2,8 @@
 library("httr")
 library("jsonlite")
 library("tidyverse")
+library(twitteR)
+library(rtweet)
 
 ################################################
 
@@ -41,16 +43,7 @@ f_test_API(use_header = headers)
 # Does the bearer token allow you to collect data?
 # if "Yes" -> continue
 # else -> fix the error(s)
-#
-################################################
-################################################
 
-################################################
-################################################
-#
-# Collect the data you need for your project
-#
-################################################
 ################################################
 
 # here you add all the code you use to collect data
@@ -80,74 +73,83 @@ f_test_API(use_header = headers)
 # ---  TEST DATASET FOR STEP 3 --
 # just 100 observations but that are representative of the tweets I'll analyze
 
-library(twitteR)
-library(rtweet)
+# Set up app and keys
+  api_key <-      "aOKiqkLHtCn4a7JSURREZ3mzX"
+  api_secret <-   "FXxaXDAcbQGM39kfW4FBPHj3qIsnve9znSONYxCwKIo7oHufhy" 
+  token <-        "2730553752-0csifYQI2kp8sIAsjszkjgnfola50xgMc11I9kb"  
+  token_secret <- "WwlbhoGOMDO4GbqlNhRXLpVuNhvngGOctH9ubiWrHoEf8"
 
-# you need to set up your own app and keys
-# these keys should no longer work and are left here just as an example
-api_key <- "4o0TVozr4Zv9FGTm3GBS05UHX" #in the quotes, put your API key 
-api_secret <- "IYU2Mvz5qk3l2a0EShIjSFkN8xq7cTxUuAxqL4RMMMv6kSgu21" #in the quotes, put your API secret token 
-token <- "3695770529-2iI42ynXl11nsSWuPMK1uiHpoFN6cf1wxbTkbmk" #in the quotes, put your token 
-token_secret <- "zPgmnwsl0p1DaIl7Olo4lDkBcLscNyvBU1Ukd7GD2H2Rx" #in the quotes, put your token secret
+# Twitter authentication using the twitteR package function
+  setup_twitter_oauth(api_key, api_secret, token, token_secret)
 
-# this sets up twitter authentification using the twitteR package function
-setup_twitter_oauth(api_key, api_secret, token, token_secret)
-
-# this sets up twitter authentification using the rtweet package function
-token <- create_token(app = "dfcp", 
+# Sets up twitter authentication using the rtweet package function
+  token <- create_token(app = "dfcp", 
                       consumer_key = api_key,
                       consumer_secret = api_secret,
                       access_token = token,
                       access_secret = token_secret)
-identical(token, get_token())
+  identical(token, get_token())
 
 
 # start with a small test to make sure everything works fine
 # this should use a search string that is very likely to return results
-# searchTwitter is part of the twitteR package
-test <- searchTwitter("pizza", n = 100, lang = "en")
-# transform to data frame
-test_tweets <- twListToDF(test)
+  
+# -------- Extracting tweets: Ana examples -------
+  
+# -- Using "searchTwitter" from twitteR package
+  
+  l.mytest <- searchTwitter("", n = 5, lang = "en")
+# We can use this function "twListToDF" to convert the list into a df.
+  df.mytest <- twListToDF(l.mytest)
+  
+# -- Using "search_tweets" from rtweet package
+  
+  l.mytest.rtweet <- search_tweets("", n = 100, lang = "en")
+# When using this package you can just use as.data.frame to convert the list to df
+  df.test.rtweet <- as.data.frame(test)
 
-# test also the function provided by rtweet
-test <- search_tweets("pizza", n = 100, lang = "en")
-# remove the test objects if all went fine
-remove(test, test_tweets)
+# -- looking into tweets about Ajax
+  # search_tweets already arranges data in a data.frame format
+  rt_ajax <- search_tweets("#AJAX", n = ntweets_to_extract, include_rts = TRUE)
+  
+  # you can now check summarize the information in the tweets
+  # for example, by looking into the frequency of tweets with "#Ajax" over 3-hour intervals
+  library(ggplot2)
+  ts_plot(rt_ajax, "3 hours") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(plot.title = ggplot2::element_text(face = "bold")) +
+    ggplot2::labs(
+      x = NULL, y = NULL,
+      title = "Frequency of #AJAX Twitter statuses",
+      subtitle = "Twitter status (tweet) counts aggregated using three-hour intervals",
+      caption = "\nSource: Data collected from Twitter's REST API via rtweet"
+    )
+  
+  
+  # the limit is set at 18000 tweets per 15 minutes, but if you need more than that, you can use "retryonratelimit = TRUE"
+  rt <- search_tweets("#Ajax", n = 250, retryonratelimit = TRUE)
+  
+  
+# ----------- Preliminary data extraction -------------
+# Amount of tweets to extract
+  ntweets_to_extract <- 100
 
-# how many tweets do you want to extract?
-ntweets_to_extract <- 18000
+# Define language
+  language <- "es"
+  
+# Specify dates. Note the API includes only info for the past 6-9 days
+  date_since <- "2021-04-01"
+  date_until <- "2021-04-07"
 
-# any restrictions for dates or location? Keep in mind that the search API index includes only the past 6-9 days
-date_since <- "2019-04-27"
-date_until <- "2019-04-28"
+# Coordinates
+# Rotteram coordinates 51.9244° N, 4.4777° E
+  rdam_geocode <- '51.9244,4.4777,10km'
+  mexicocity_geocode <- "19.432608,-99.133208,30km"
 
-# Rdam coordinates
-# 51.9244° N, 4.4777° E
-rdam_geocode <- '51.9244,4.4777,10km'
-
-# this returns 0 results because the time interval is already too far back in time
-tweets <- searchTwitter("#kingsday", n = ntweets_to_extract, lang = "en", since = date_since, until = date_until, geocode = rdam_geocode)
-
-# looking into tweets about Ajax
-# search_tweets already arranges data in a data.frame format
-rt_ajax <- search_tweets("#AJAX", n = ntweets_to_extract, include_rts = TRUE)
-
-# you can now check summarize the information in the tweets
-# for example, by looking into the frequency of tweets with "#Ajax" over 3-hour intervals
-library(ggplot2)
-ts_plot(rt_ajax, "3 hours") +
-  ggplot2::theme_minimal() +
-  ggplot2::theme(plot.title = ggplot2::element_text(face = "bold")) +
-  ggplot2::labs(
-    x = NULL, y = NULL,
-    title = "Frequency of #AJAX Twitter statuses",
-    subtitle = "Twitter status (tweet) counts aggregated using three-hour intervals",
-    caption = "\nSource: Data collected from Twitter's REST API via rtweet"
-  )
+# Tweet Search
+  l.tweets <- searchTwitter("corrupcion", n = ntweets_to_extract, 
+                            lang = language, geocode = mexicocity_geocode)
+  df.tweets <- twListToDF(l.tweets)
 
 
-# the limit is set at 18000 tweets per 15 minutes, but if you need more than that, you can use "retryonratelimit = TRUE"
-rt <- search_tweets("#Ajax", n = 250000, retryonratelimit = TRUE)
 
-
-######
