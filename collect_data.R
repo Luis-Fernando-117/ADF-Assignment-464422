@@ -2,8 +2,8 @@
 library("httr")
 library("jsonlite")
 library("tidyverse")
-library(twitteR)
-library(rtweet)
+library("twitteR")
+library("rtweet")
 
 ################################################
 
@@ -76,10 +76,10 @@ f_test_API(use_header = headers)
 # --- Preparations for Data extraction ---
 
 # Set up app and keys
-  api_key <-      "aOKiqkLHtCn4a7JSURREZ3mzX"
-  api_secret <-   "FXxaXDAcbQGM39kfW4FBPHj3qIsnve9znSONYxCwKIo7oHufhy" 
-  token <-        "2730553752-0csifYQI2kp8sIAsjszkjgnfola50xgMc11I9kb"  
-  token_secret <- "WwlbhoGOMDO4GbqlNhRXLpVuNhvngGOctH9ubiWrHoEf8"
+  api_key <-      Sys.getenv("API_KEY")
+  api_secret <-   Sys.getenv("API_SECRET")
+  token <-        Sys.getenv("TOKEN")
+  token_secret <- Sys.getenv("TOKEN_SECRET")
 
 # Twitter authentication using the twitteR package function
   setup_twitter_oauth(api_key, api_secret, token, token_secret)
@@ -100,7 +100,7 @@ f_test_API(use_header = headers)
   
 # -- Using "searchTwitter" from twitteR package
   
-  l.mytest <- searchTwitter("", n = 5, lang = "en")
+  l.mytest <- searchTwitter("pizza", n = 5, lang = "en")
 # We can use this function "twListToDF" to convert the list into a df.
   df.mytest <- twListToDF(l.mytest)
   
