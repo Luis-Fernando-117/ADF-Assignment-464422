@@ -168,13 +168,9 @@ if(is.null(bearer_token)) {
   remove(df_obj, next_token, params, response, 
          obj, n_tweets_per_request)
   
-  # I choose 7 because based on the tweets I have on my page, this will include:
-  #		replies to tweets written by other people
-  #		quoted retweets
-  #		retweets
-  #		original tweets (that I wrote without replying to someone else)
-  params <- list(max_results = '7',
-                 tweet.fields = 'created_at,author_id,conversation_id',
+  # Get additional fields 
+  params <- list(max_results = '10',
+                 tweet.fields = 'created_at,author_id,conversation_id,public_metrics',
                  expansions = 'referenced_tweets.id')
   # referenced_tweets.id will return a Tweet object that the focal Tweet is referencing
   # focal Tweet = the tweet that includes the target_hashtag
