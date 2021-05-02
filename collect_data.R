@@ -74,12 +74,12 @@ if(is.null(bearer_token)) {
   #setup_twitter_oauth(api_key, api_secret, token, token_secret)
 
 # Sets up twitter authentication using the rtweet package function
-  token <- create_token(app = "dfcp", 
-                      consumer_key = api_key,
-                      consumer_secret = api_secret,
-                      access_token = token,
-                      access_secret = token_secret)
-  identical(token, get_token())
+  #token <- create_token(app = "dfcp", 
+   #                   consumer_key = api_key,
+    #                  consumer_secret = api_secret,
+     #                 access_token = token,
+      #                access_secret = token_secret)
+  #identical(token, get_token())
 
 
 # start with a small test to make sure everything works fine
@@ -125,68 +125,10 @@ if(is.null(bearer_token)) {
   user_id <- df_obj[["data.id"]]
   
   ################################################
-  # Step 2: get tweets for this user_id
+  # Step 2: get some tweets for this user_id
   ################################################
   
-  url_handle <- paste0('https://api.twitter.com/2/users/', user_id, "/tweets")
-  # by default, the number of tweets retrieved per request is 10
-  # you can ask for more tweets (check the documentation for exact info)
-  params <- list(max_results = '50')
-  response <-	httr::GET(url = url_handle,
-                        config = httr::add_headers(.headers = my_header[["headers"]]),
-                        query = params)
-  httr::status_code(response)
-  obj <- httr::content(response, as = "text")
-  df_obj <- jsonlite::fromJSON(obj, flatten = TRUE) %>% as.data.frame
-  tweets_1_to_50 <- df_obj
-  
-  # there are more tweets to collect, so we need to use the pagination token 
-  # to make sure that you're doing this correctly and are not missing any tweets, 
-  #		you can try this:
-  #		collect tweets 1-25
-  #		use the pagination token to collect tweets 26-50
-  #		compare the results against tweets_1_to_50
-  
-  #		collect tweets 1-25
-  params <- list(max_results = '25')
-  response <-	httr::GET(url = url_handle,
-                        config = httr::add_headers(.headers = my_header[["headers"]]),
-                        query = params)
-  httr::status_code(response)
-  obj <- httr::content(response, as = "text")
-  df_obj <- jsonlite::fromJSON(obj, flatten = TRUE) %>% as.data.frame
-  tweets_1_to_25 <- df_obj
-  
-  #		use the pagination token to collect tweets 26-50
-  next_token <- distinct(tweets_1_to_25 %>% select(meta.next_token))
-  next_token
-  
-  params <- list(max_results = '25',
-                 pagination_token = next_token$meta.next_token)
-  response <-	httr::GET(url = url_handle,
-                        config = httr::add_headers(.headers = my_header[["headers"]]),
-                        query = params)
-  httr::status_code(response)
-  obj <- httr::content(response, as = "text")
-  df_obj <- jsonlite::fromJSON(obj, flatten = TRUE) %>% as.data.frame
-  tweets_26_to_50 <- df_obj
-  
-  #		compare the results against tweets_1_to_50
-  tweets_two_steps <- rbind(tweets_1_to_25, 
-                            tweets_26_to_50 %>% select(-meta.previous_token))
-  # are any tweet ids in the initial df of 50 that are not available in the two step procedure?
-  anti_join(tweets_1_to_50, tweets_two_steps, by = c("data.id", "data.text"))
-  # are any tweet ids in the two step procedure that are not available in the initial df of 50?
-  anti_join(tweets_two_steps, tweets_1_to_50, by = c("data.id", "data.text"))
-  
-  remove(df_obj, next_token, params, response, tweets_1_to_25, tweets_1_to_50,
-         tweets_26_to_50, tweets_two_steps, handle, obj, url_handle)
-  
-  ################################################
-  # Step 3: get ALL tweets for this user_id
-  ################################################
-  
-  # get the first batch
+  #  --- Get the first batch with 50 tweets
   url_handle <- paste0('https://api.twitter.com/2/users/', user_id, "/tweets")
   n_tweets_per_request <- '50'
   params <- list(max_results = n_tweets_per_request)
@@ -199,6 +141,7 @@ if(is.null(bearer_token)) {
   
   ALL_tweets <- df_obj %>% select(data.id, data.text)
   
+  # ---- Get all the tweets from this user
   # as long as there are more tweets to collect, meta.next_token has a value
   # otherwise, if meta.next_token is null, this means you've collected all
   # tweets from this user
@@ -219,7 +162,7 @@ if(is.null(bearer_token)) {
   
   
   ################################################
-  # Step 4: add twitter fields and expansions
+  # Step 3: add twitter fields and expansions
   ################################################
   
   remove(df_obj, next_token, params, response, 
