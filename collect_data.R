@@ -133,6 +133,29 @@ f_test_API(use_header = headers)
   
   
 # ----------- Preliminary data extraction -------------
+  
+# The end goal is to extract all the replies to  tweets from political leaders 
+# and do text mining on these replies
+
+# As a first MVP lets start with a single account of a president, this time from
+# Mexico. 
+  
+# Step 1: Get user id, by making use of the handle - Copy paste from Public Repo
+
+# In the data processing we need tweets that replied to tweets of the political 
+# leader, so replies to original tweets coming from the user id of the political leader
+  
+  # check the "type_of_tweet_extension"
+  
+  # Think of the stoping criteria , how many tweets are enough
+  
+  
+  
+  
+  
+  
+  
+# ---- My Test ----------- 
 # Amount of tweets to extract
   ntweets_to_extract <- 100
 
