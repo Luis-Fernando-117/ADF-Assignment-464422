@@ -58,6 +58,8 @@ users_with_tweets_and_unprotected <- select(filter(users_with_tweets_and_unprote
 targetfollowers.50 <- filter(targetfollowers, user_id %in% users_with_tweets_and_unprotected$user_id)
 
 
+
+
 ########################################
 # Data Analyis part - to be in Rmd file
 #####################################
