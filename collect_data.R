@@ -5,6 +5,8 @@ library("tidyverse")
 library("twitteR")
 library("rtweet")
 
+load("df.tweets.obrador.RData")
+
 ################################################
 
 # -------- Step 1: Test API connection --------
@@ -65,26 +67,21 @@ if(is.null(bearer_token)) {
 # --- Preparations for Data extraction ---
 
 # Set up app and keys
-  #api_key <-      Sys.getenv("API_KEY")
-  #api_secret <-   Sys.getenv("API_SECRET")
-  #token <-        Sys.getenv("TOKEN")
-  #token_secret <- Sys.getenv("TOKEN_SECRET")
+  api_key <-      Sys.getenv("API_KEY")
+  api_secret <-   Sys.getenv("API_SECRET")
+  token <-        Sys.getenv("TOKEN")
+  token_secret <- Sys.getenv("TOKEN_SECRET")
 
 # Twitter authentication using the twitteR package function
   #setup_twitter_oauth(api_key, api_secret, token, token_secret)
 
 # Sets up twitter authentication using the rtweet package function
-  #token <- create_token(app = "dfcp", 
-   #                   consumer_key = api_key,
-    #                  consumer_secret = api_secret,
-     #                 access_token = token,
-      #                access_secret = token_secret)
-  #identical(token, get_token())
-
-
-# start with a small test to make sure everything works fine
-# this should use a search string that is very likely to return results
-  
+  token <- create_token(app = "dfcp", 
+                    consumer_key = api_key,
+                      consumer_secret = api_secret,
+                      access_token = token,
+                      access_secret = token_secret)
+  identical(token, get_token())
 
   
 # ----------- Preliminary data extraction -------------
@@ -105,30 +102,12 @@ if(is.null(bearer_token)) {
   # Think of the stoping criteria , how many tweets are enough
   
  
-  ################################################
-  # Step 1: collect the user_id for this handle
-  ################################################
-  handle <- 'lopezobrador_'
-  url_handle <- paste0('https://api.twitter.com/2/users/by?usernames=', handle)
-  response <-	httr::GET(url = url_handle,
-                        config = httr::add_headers(.headers = my_header[["headers"]]))
-  # always check the HTTP response before doing anything else
-  httr::status_code(response)
-  # if 200 (Success), then continue.
-  # else, fix the issues first
-  
-  # convert the output to text and then to a data frame
-  obj <- httr::content(response, as = "text")
-  df_obj <- jsonlite::fromJSON(obj, flatten = TRUE) %>% as.data.frame
-  print(df_obj)
-  # data.id is the user_id I need
-  user_id <- df_obj[["data.id"]]
-  
-  ################################################
-  # Step 2: get some tweets for this user_id
-  ################################################
+  #############################################################
+  # Step 1: collect the user_id for this handle and some tweets
+  #############################################################
   
   #  --- Get the first batch with 50 tweets
+  handle <- 'lopezobrador_'
   url_handle <- paste0('https://api.twitter.com/2/users/', user_id, "/tweets")
   n_tweets_per_request <- '50'
   params <- list(max_results = n_tweets_per_request)
@@ -140,6 +119,12 @@ if(is.null(bearer_token)) {
   df_obj <- jsonlite::fromJSON(obj, flatten = TRUE) %>% as.data.frame
   
   ALL_tweets <- df_obj %>% select(data.id, data.text)
+  
+  ################################################
+  # Step 2: get ALL tweets for this user_id
+  ################################################
+  
+ 
   
   # ---- Get all the tweets from this user
   # as long as there are more tweets to collect, meta.next_token has a value
@@ -160,17 +145,28 @@ if(is.null(bearer_token)) {
     ALL_tweets <- rbind(ALL_tweets, df_obj %>% select(data.id, data.text))
   }
   
+  # Give it a better name to the df we created
+  df.tweets.lopezobrador <-  ALL_tweets
   
+  # Save data drame
+  #save(df.tweets.lopezobrador, file = "df.tweets.obrador.RData")
   ################################################
   # Step 3: add twitter fields and expansions
   ################################################
   
+  # I need to get tweets that are "in_reply_to_user_id" = id of obrador
+  
   remove(df_obj, next_token, params, response, 
-         obj, n_tweets_per_request)
+         obj, n_tweets_per_request, ALL_tweets)
+  
+  
+  
+  
+  
   
   # Get additional fields 
   params <- list(max_results = '10',
-                 tweet.fields = 'created_at,author_id,conversation_id,public_metrics',
+                 tweet.fields = 'created_at,author_id,conversation_id,public_metrics,in_reply_to_user_id',
                  expansions = 'referenced_tweets.id')
   # referenced_tweets.id will return a Tweet object that the focal Tweet is referencing
   # focal Tweet = the tweet that includes the target_hashtag
