@@ -1,3 +1,7 @@
+
+# I have to push all the files to this repo to Ana can see them
+#https://github.com/Digital-Footprints/dsrp_ia-Luis-Fernando-117
+
 #Load Packages
 
 library("httr")
