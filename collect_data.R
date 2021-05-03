@@ -123,10 +123,6 @@ if(is.null(bearer_token)) {
   ################################################
   # Step 2: get ALL tweets for this user_id
   ################################################
-  
- 
-  
-  # ---- Get all the tweets from this user
   # as long as there are more tweets to collect, meta.next_token has a value
   # otherwise, if meta.next_token is null, this means you've collected all
   # tweets from this user
