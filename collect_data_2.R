@@ -58,7 +58,9 @@ users_with_tweets_and_unprotected <- select(filter(users_with_tweets_and_unprote
 targetfollowers.50 <- filter(targetfollowers, user_id %in% users_with_tweets_and_unprotected$user_id)
 
 
-
+#Save important things
+#save(tmls, file = "timeline-obrador-50.RData")
+#save(targetfollowers.50, file ="obrador-followers-cleaned.RData")
 
 ########################################
 # Data Analyis part - to be in Rmd file
