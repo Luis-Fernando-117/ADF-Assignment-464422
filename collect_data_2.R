@@ -100,7 +100,7 @@ for (i in v.followers.ids) {
   dt.followers.replies.to.target <- as.data.table(df.followers.tm)
   dt.followers.replies.to.target <- dt.followers.replies.to.target[reply_to_user_id == targettwitteruserid, ]
   
-# It works til here !!!!
+#It works til here !!!!
   
 statuses_of_followers <- lookup_statuses(v.followers.ids)
 
