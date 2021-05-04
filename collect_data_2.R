@@ -62,12 +62,12 @@ user_lookup <- lookup_users(v.obradorfollowers.50)
 users_with_tweets_and_unprotected <- filter(user_lookup, statuses_count != 0)
 users_with_tweets_and_unprotected <- select(filter(users_with_tweets_and_unprotected, protected != "TRUE"), user_id)
 
-targetfollowers.50 <- filter(targetfollowers, user_id %in% users_with_tweets_and_unprotected$user_id)
+targetfollowers.filtered <- filter(targetfollowers, user_id %in% users_with_tweets_and_unprotected$user_id)
 
 
 #Save important things
 #save(tmls, file = "timeline-obrador-50.RData")
-#save(targetfollowers.50, file ="obrador-followers-cleaned.RData")
+#save(targetfollowers.filtered, file ="obrador-followers-cleaned.RData")
 #save(targettwitteruserid, file = "user_id_obrador.RData")
 
 load("timeline-obrador-50.RData")
@@ -75,42 +75,28 @@ load("obrador-followers-cleaned.RData")
 load("user_id_obrador.RData")
 
 
-##custom function to search all followers timelines one by one
-getfollowersreplies <- function(x){
-  follower <- as.numeric(x[1])
-  followertl <- data.frame(get_timeline(follower, n=2, retryonratelimit=TRUE))
-  followertl <- filter(followertl, in_reply_to_status_user_id == targettwitteruserid)
-  followertl <- transform(followertl, reply_to_status_id_num=as.numeric(in_reply_to_status_status_id))
-  join <- inner_join(followertl, tweetids, by=c("reply_to_status_id_num"="status_id_num"))
-  replycounts <- data.frame(
-    join %>%
-      group_by(user_id, reply_to_status_id_num) %>%
-      summarise(n=n())
-  )
-  return(replycounts)
-}
+## ----Get a loop to get statuses of all the followers
 
+# Create a vector with filtered followers id's
+  v.filtered.followers.ids <- as.vector(as.numeric(targetfollowers.filtered$user_id))
 
-tweet_replies_test <- do.call("rbind", lapply(targetfollowers.50$user_id, getfollowersreplies))
-
-## Get a loop to get statuses of all the followers
-
-  v.followers.ids <- as.vector(as.numeric(targetfollowers.50$user_id))
-#l.followers.responses.to.target <- as.list(NULL)
-
-#Get columns names of what "get_timeline" function extracts and
-# create an empty data table
-  df.followers.responses.to.target <- data.frame(matrix(ncol = 90, nrow = 0))
+#Get columns names of what "get_timeline" function extracts and create an empty data table
+  df.followers.tm <- data.frame(matrix(ncol = 90, nrow = 0))
   my.col.names <- colnames(tmls)
-  colnames(df.followers.responses.to.target) <- my.col.names
+  colnames(df.followers.tm) <- my.col.names
   
 # Create a loop that gets some tweets of the followers fo the target user
 for (i in v.followers.ids) {
   follower_id <- as.numeric(i)
   df.follower_tm <- as.data.frame((get_timeline(follower_id, n=2)))
-  df.followers.responses.to.target <- rbind(df.followers.responses.to.target, df.follower_tm)
+  df.followers.tm <- rbind(df.followers.tm, df.follower_tm)
 }
 
+# Filter the observations to include only those tweets that are replies to tweets 
+# made by our target
+  dt.followers.replies.to.target <- as.data.table(df.followers.tm)
+  dt.followers.replies.to.target <- dt.followers.replies.to.target[reply_to_user_id == targettwitteruserid, ]
+  
 #It works til here !!!!
   
 statuses_of_followers <- lookup_statuses(v.followers.ids)
@@ -120,6 +106,9 @@ statuses_of_followers <- lookup_statuses(v.followers.ids)
 #test.timeline.user <- test.timeline.user[, list(user_id, text, reply_to_user_id)]
 
 #dt.followers.responses.to.target <- rbind(dt.followers.responses.to.target, test.timeline.user)
+
+
+
 
 ########################################
 # Data Analyis part - to be in Rmd file
