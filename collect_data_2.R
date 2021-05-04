@@ -35,8 +35,18 @@ if(is.null(bearer_token)) {
 ################################################
 # --------- SECTION 2 : Collect Data  ------------
 ################################################
+load("timeline-obrador-50.RData")
+load("obrador-followers-cleaned.RData")
+load("user_id_obrador.RData")
+load("obradorfollowers.RData")
+load("df.obradorfollowers.RData")
 
-### See how much followers of a political leader interact with his/her tweets
+### --------See how many of the followers of a political leader interact with his/her tweets
+# Additionally we can see out of his followers, whats the proportion that has replied to him
+# at least once, and analyze the overall sentiment of the replied tweets to that target user
+# we could further split the tweets between those tweets that are replies to target users
+# and normal tweets of followers and see if there is a difference in sentiment between 
+# these two.
 
 ##set name of tweeter to look at (this can be changed)
 targettwittername <- "lopezobrador_"
@@ -44,35 +54,27 @@ targettwittername <- "lopezobrador_"
 ##get this tweeter's timeline
 tmls <- get_timeline(targettwittername, n=50, retryonratelimit=TRUE)
 
-##get their user id
-targettwitteruserid <- as.numeric(select(lookup_users(targettwittername), user_id))
+# get their user id
+  targettwitteruserid <- as.numeric(select(lookup_users(targettwittername), user_id))
 
-##get ids of their tweets
-tweetids <- select(tmls, status_id)
-tweetids <- transform(tweetids, status_id_num=as.numeric(status_id))
+# Get ids of their tweets
+  tweetids <- select(tmls, status_id)
+  tweetids <- transform(tweetids, status_id_num=as.numeric(status_id))
 
-##get list of followers (who are most likely to reply)
-targetfollowers.50 <- data.frame(get_followers(targettwittername, n = 50))
+# Get list of followers (who are most likely to reply)
+  targetfollowers <- data.frame(get_followers(targettwittername, n = 10000))
 
-v.obradorfollowers.50 <- as.vector(targetfollowers.50$user_id)
+  v.obradorfollowers <- as.vector(targetfollowers$user_id)
 
-##clean up follower list to exclude those that have never tweeted and restricted access
+# Clean up follower list to exclude those that have never tweeted and restricted access
+  user_lookup <- lookup_users(v.obradorfollowers)
+  users_with_tweets_and_unprotected <- filter(user_lookup, statuses_count != 0)
+  users_with_tweets_and_unprotected <- select(filter(users_with_tweets_and_unprotected, protected != "TRUE"), user_id)
 
-user_lookup <- lookup_users(v.obradorfollowers.50)
-users_with_tweets_and_unprotected <- filter(user_lookup, statuses_count != 0)
-users_with_tweets_and_unprotected <- select(filter(users_with_tweets_and_unprotected, protected != "TRUE"), user_id)
-
-targetfollowers.filtered <- filter(targetfollowers, user_id %in% users_with_tweets_and_unprotected$user_id)
+  targetfollowers.filtered <- filter(targetfollowers, user_id %in% users_with_tweets_and_unprotected$user_id)
 
 
-#Save important things
-#save(tmls, file = "timeline-obrador-50.RData")
-#save(targetfollowers.filtered, file ="obrador-followers-cleaned.RData")
-#save(targettwitteruserid, file = "user_id_obrador.RData")
 
-load("timeline-obrador-50.RData")
-load("obrador-followers-cleaned.RData")
-load("user_id_obrador.RData")
 
 
 ## ----Get a loop to get statuses of all the followers
@@ -84,11 +86,12 @@ load("user_id_obrador.RData")
   df.followers.tm <- data.frame(matrix(ncol = 90, nrow = 0))
   my.col.names <- colnames(tmls)
   colnames(df.followers.tm) <- my.col.names
-  
+
+
 # Create a loop that gets some tweets of the followers fo the target user
 for (i in v.followers.ids) {
   follower_id <- as.numeric(i)
-  df.follower_tm <- as.data.frame((get_timeline(follower_id, n=2)))
+  df.follower_tm <- as.data.frame((get_timeline(follower_id, n=5)))
   df.followers.tm <- rbind(df.followers.tm, df.follower_tm)
 }
 
@@ -109,6 +112,12 @@ statuses_of_followers <- lookup_statuses(v.followers.ids)
 
 
 
+#Save important things
+#save(v.obradorfollowers, file = "obradorfollowers.RData")
+#save(targetfollowers, file = "df.obradorfollowers.RData")
+#save(targetfollowers.filtered, file ="obrador-followers-cleaned.RData")
+#save(targettwitteruserid, file = "user_id_obrador.RData")
+#save(df.followers.tm, file = "df.followers.tm.RData")
 
 ########################################
 # Data Analyis part - to be in Rmd file
