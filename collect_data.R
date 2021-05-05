@@ -73,7 +73,7 @@ if(is.null(bearer_token)) {
   token_secret <- Sys.getenv("TOKEN_SECRET")
 
 # Twitter authentication using the twitteR package function
-  #setup_twitter_oauth(api_key, api_secret, token, token_secret)
+  setup_twitter_oauth(api_key, api_secret, token, token_secret)
 
 # Sets up twitter authentication using the rtweet package function
   token <- create_token(app = "dfcp", 

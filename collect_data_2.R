@@ -75,38 +75,24 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   id.lenin <- l.info.lenin$id
   id.bukele <- l.info.bukele$id
   
-# Get followers count to see how 
-  df.info.obrador <- str(user.info.obrador$toDataFrame())
-  df.info.obrador <- as.data.table(df.info.obrador)
-  
 # Targets timelines
   timeline.obrador <- get_timeline(targettwittername.obrador, n=5, retryonratelimit=TRUE)
   timeline.pinera <- get_timeline(targettwittername.pinera, n=5, retryonratelimit=TRUE)
   timeline.lenin <- get_timeline(targettwittername.lenin, n=5, retryonratelimit=TRUE)
   timeline.bukele <- get_timeline(targettwittername.bukele, n=5, retryonratelimit=TRUE)
   
-# get their user id
- 
-  
-  obrador.userid <- as.numeric(select(lookup_users(targettwittername.obrador), user_id))
-  pinera.userid <- as.numeric(select(lookup_users(targettwittername.pinera), user_id))
-  lenin.userid <- as.numeric(select(lookup_users(targettwittername.lenin), user_id))
-  bukele.userid <- as.numeric(select(lookup_users(targettwittername.bukele), user_id))
-  
 # Get ids of their tweets
   obrador.tweetids <-  as.numeric(timeline.obrador$status_id)
-  fernandez.tweetsids <- as.numeric(timeline.fernandez$status_id)
+  pinera.tweetsids <- as.numeric(timeline.pinera$status_id)
+  lenin.tweetsids <- as.numeric(timeline.lenin$status_id)
   bukele.tweetsids <- as.numeric(timeline.bukele$status_id)
   
-# Get a list of followers as vectors (who are most likely to reply)
+# Get a vector with of their followers
   
-  # Of Lopez Obrador
+# Of Lopez Obrador
   v.obrador.followers <- as.vector(get_followers(targettwittername.obrador, n = 10))
-
-  # Of Alberto Fernandez
-  v.fernandez.followers <- as.vector(get_followers(targettwittername.fernandez, n = 10))
-
- # Of Nayib Bukele
+  v.pinera.followers <- as.vector(get_followers(targettwittername.pinera, n = 10))
+  v.lenin.follwers <- as.vector(get_followers(targettwittername.lenin, n = 10))
   v.bukele.followers <- as.vector(get_followers(targettwittername.bukele, n = 10))
 
 
