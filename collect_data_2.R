@@ -116,9 +116,9 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
 # Get a vector with of their followers id's
   
   v.obrador.followers <- as.vector(get_followers(targettwittername.obrador, n = 10))
-  v.pinera.followers <- as.vector(get_followers(targettwittername.pinera, n = 10))
-  v.lenin.follwers <- as.vector(get_followers(targettwittername.lenin, n = 10))
-  v.bukele.followers <- as.vector(get_followers(targettwittername.bukele, n = 10))
+  v.pinera.followers  <- as.vector(get_followers(targettwittername.pinera, n = 10))
+  v.lenin.follwers    <- as.vector(get_followers(targettwittername.lenin, n = 10))
+  v.bukele.followers  <- as.vector(get_followers(targettwittername.bukele, n = 10))
 
 
 # Save important things
