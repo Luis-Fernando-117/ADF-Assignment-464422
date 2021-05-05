@@ -77,7 +77,7 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   presidents_ids <- data.frame(id.obrador,id.pinera,id.lenin,id.bukele)
 
 # We will see the actual number of followers of these presidents to get 
-# appropiate proportions on the number of tweets from their followers we will scrape
+# appropriate proportions on the number of tweets from their followers we will scrape
 
 # Get followers count per president
   nr.followers.presidents <- data.frame(l.info.obrador$followersCount, 
@@ -114,7 +114,7 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   lenin.tweetsids  <- as.numeric(timeline.lenin$status_id)
   bukele.tweetsids <- as.numeric(timeline.bukele$status_id)
   
-# Get a vector with of their followers id's (here comes in the proportions)
+# Get a vector with of their followers id's (here comes in the proportions) !!!!!! CONTINUE HERE
   v.obrador.followers <- as.vector(get_followers(targettwittername.obrador, n = 10))
   v.pinera.followers  <- as.vector(get_followers(targettwittername.pinera, n = 10))
   v.lenin.follwers    <- as.vector(get_followers(targettwittername.lenin, n = 10))
