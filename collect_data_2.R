@@ -73,6 +73,8 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   id.pinera  <- l.info.pinera$id
   id.lenin   <- l.info.lenin$id
   id.bukele  <- l.info.bukele$id
+  
+  presidents_ids <- data.frame(id.obrador,id.pinera,id.lenin,id.bukele)
 
 # We will see the actual number of followers of these presidents to get 
 # appropiate proportions on the number of tweets from their followers we will scrape
@@ -106,38 +108,17 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   timeline.lenin   <- get_timeline(targettwittername.lenin,   n=3200, retryonratelimit=TRUE)
   timeline.bukele  <- get_timeline(targettwittername.bukele,  n=3200, retryonratelimit=TRUE)
   
-# Get ids of their tweets
+# Get id status of their tweets
   obrador.tweetids <- as.numeric(timeline.obrador$status_id)
   pinera.tweetsids <- as.numeric(timeline.pinera$status_id)
   lenin.tweetsids  <- as.numeric(timeline.lenin$status_id)
   bukele.tweetsids <- as.numeric(timeline.bukele$status_id)
   
-# Get a vector with of their followers id's
-  
+# Get a vector with of their followers id's (here comes in the proportions)
   v.obrador.followers <- as.vector(get_followers(targettwittername.obrador, n = 10))
   v.pinera.followers  <- as.vector(get_followers(targettwittername.pinera, n = 10))
   v.lenin.follwers    <- as.vector(get_followers(targettwittername.lenin, n = 10))
   v.bukele.followers  <- as.vector(get_followers(targettwittername.bukele, n = 10))
-
-# Targets timelines
-  timeline.obrador <- get_timeline(targettwittername.obrador, n=5, retryonratelimit=TRUE)
-  timeline.pinera <- get_timeline(targettwittername.pinera, n=5, retryonratelimit=TRUE)
-  timeline.lenin <- get_timeline(targettwittername.lenin, n=5, retryonratelimit=TRUE)
-  timeline.bukele <- get_timeline(targettwittername.bukele, n=5, retryonratelimit=TRUE)
-  
-# Get ids of their tweets
-  obrador.tweetids <-  as.numeric(timeline.obrador$status_id)
-  pinera.tweetsids <- as.numeric(timeline.pinera$status_id)
-  lenin.tweetsids <- as.numeric(timeline.lenin$status_id)
-  bukele.tweetsids <- as.numeric(timeline.bukele$status_id)
-  
-# Get a vector with of their followers
-  
-# Of Lopez Obrador
-  v.obrador.followers <- as.vector(get_followers(targettwittername.obrador, n = 10))
-  v.pinera.followers <- as.vector(get_followers(targettwittername.pinera, n = 10))
-  v.lenin.follwers <- as.vector(get_followers(targettwittername.lenin, n = 10))
-  v.bukele.followers <- as.vector(get_followers(targettwittername.bukele, n = 10))
 
 
 # Save important things
