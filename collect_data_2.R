@@ -56,45 +56,47 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
 # and normal tweets of followers and see if there is a difference in sentiment between 
 # these two.
 
-
 # Twitter names of targets
-  targettwittername.obrador <- "lopezobrador_"
-  targettwittername.pinera <- "sebastianpinera"
-  targettwittername.lenin <- "Lenin"
-  targettwittername.bukele <- "nayibbukele"
+  targettwittername.obrador <-  "lopezobrador_"
+  targettwittername.pinera  <-  "sebastianpinera"
+  targettwittername.lenin   <-  "Lenin"
+  targettwittername.bukele  <-  "nayibbukele"
   
 # Get information about the presidents
   l.info.obrador <- getUser(targettwittername.obrador)
-  l.info.pinera <- getUser(targettwittername.pinera)
-  l.info.lenin <- getUser(targettwittername.lenin)
-  l.info.bukele <- getUser(targettwittername.bukele)
+  l.info.pinera  <- getUser(targettwittername.pinera)
+  l.info.lenin   <- getUser(targettwittername.lenin)
+  l.info.bukele  <- getUser(targettwittername.bukele)
   
-# get their user id
+# Get their user id
   id.obrador <- l.info.obrador$id
-  id.pinera <- l.info.pinera$id
-  id.lenin <- l.info.lenin$id
-  id.bukele <- l.info.bukele$id
+  id.pinera  <- l.info.pinera$id
+  id.lenin   <- l.info.lenin$id
+  id.bukele  <- l.info.bukele$id
+
+# Get followers count 
+  str(user.info.obrador$toDataFrame()) 
+  l.info.obrador$
   
 # Targets timelines
   timeline.obrador <- get_timeline(targettwittername.obrador, n=5, retryonratelimit=TRUE)
-  timeline.pinera <- get_timeline(targettwittername.pinera, n=5, retryonratelimit=TRUE)
-  timeline.lenin <- get_timeline(targettwittername.lenin, n=5, retryonratelimit=TRUE)
-  timeline.bukele <- get_timeline(targettwittername.bukele, n=5, retryonratelimit=TRUE)
+  timeline.pinera  <- get_timeline(targettwittername.pinera,  n=5, retryonratelimit=TRUE)
+  timeline.lenin   <- get_timeline(targettwittername.lenin,   n=5, retryonratelimit=TRUE)
+  timeline.bukele  <- get_timeline(targettwittername.bukele,  n=5, retryonratelimit=TRUE)
   
 # Get ids of their tweets
-  obrador.tweetids <-  as.numeric(timeline.obrador$status_id)
+  obrador.tweetids <- as.numeric(timeline.obrador$status_id)
   pinera.tweetsids <- as.numeric(timeline.pinera$status_id)
-  lenin.tweetsids <- as.numeric(timeline.lenin$status_id)
+  lenin.tweetsids  <- as.numeric(timeline.lenin$status_id)
   bukele.tweetsids <- as.numeric(timeline.bukele$status_id)
   
-# Get a vector with of their followers
+# Get a vector with of their followers id's
   
 # Of Lopez Obrador
   v.obrador.followers <- as.vector(get_followers(targettwittername.obrador, n = 10))
   v.pinera.followers <- as.vector(get_followers(targettwittername.pinera, n = 10))
   v.lenin.follwers <- as.vector(get_followers(targettwittername.lenin, n = 10))
   v.bukele.followers <- as.vector(get_followers(targettwittername.bukele, n = 10))
-
 
 
 # Save important things
