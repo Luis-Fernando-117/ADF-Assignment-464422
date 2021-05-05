@@ -83,6 +83,7 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
                                         l.info.lenin$followersCount,
                                         l.info.bukele$followersCount)
   
+<<<<<<< HEAD
 # Write better names
   names(nr.followers.presidents)[1] <- "Mexico"
   names(nr.followers.presidents)[2] <- "Chile"
@@ -119,6 +120,28 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   v.pinera.followers  <- as.vector(get_followers(targettwittername.pinera, n = 10))
   v.lenin.follwers    <- as.vector(get_followers(targettwittername.lenin, n = 10))
   v.bukele.followers  <- as.vector(get_followers(targettwittername.bukele, n = 10))
+=======
+# Targets timelines
+  timeline.obrador <- get_timeline(targettwittername.obrador, n=5, retryonratelimit=TRUE)
+  timeline.pinera <- get_timeline(targettwittername.pinera, n=5, retryonratelimit=TRUE)
+  timeline.lenin <- get_timeline(targettwittername.lenin, n=5, retryonratelimit=TRUE)
+  timeline.bukele <- get_timeline(targettwittername.bukele, n=5, retryonratelimit=TRUE)
+  
+# Get ids of their tweets
+  obrador.tweetids <-  as.numeric(timeline.obrador$status_id)
+  pinera.tweetsids <- as.numeric(timeline.pinera$status_id)
+  lenin.tweetsids <- as.numeric(timeline.lenin$status_id)
+  bukele.tweetsids <- as.numeric(timeline.bukele$status_id)
+  
+# Get a vector with of their followers
+  
+# Of Lopez Obrador
+  v.obrador.followers <- as.vector(get_followers(targettwittername.obrador, n = 10))
+  v.pinera.followers <- as.vector(get_followers(targettwittername.pinera, n = 10))
+  v.lenin.follwers <- as.vector(get_followers(targettwittername.lenin, n = 10))
+  v.bukele.followers <- as.vector(get_followers(targettwittername.bukele, n = 10))
+
+>>>>>>> 5ad184a02d2ffbb0c811897b9a5e55ee1db9b837
 
 
 # Save important things
