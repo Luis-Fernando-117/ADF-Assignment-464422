@@ -82,8 +82,6 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
                                         l.info.pinera$followersCount,
                                         l.info.lenin$followersCount,
                                         l.info.bukele$followersCount)
-  
-<<<<<<< HEAD
 # Write better names
   names(nr.followers.presidents)[1] <- "Mexico"
   names(nr.followers.presidents)[2] <- "Chile"
