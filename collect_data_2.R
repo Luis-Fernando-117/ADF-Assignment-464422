@@ -74,15 +74,38 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   id.lenin   <- l.info.lenin$id
   id.bukele  <- l.info.bukele$id
 
-# Get followers count 
-  str(user.info.obrador$toDataFrame()) 
-  l.info.obrador$
+# We will see the actual number of followers of these presidents to get 
+# appropiate proportions on the number of tweets from their followers we will scrape
+
+# Get followers count per president
+  nr.followers.presidents <- data.frame(l.info.obrador$followersCount, 
+                                        l.info.pinera$followersCount,
+                                        l.info.lenin$followersCount,
+                                        l.info.bukele$followersCount)
   
-# Targets timelines
-  timeline.obrador <- get_timeline(targettwittername.obrador, n=5, retryonratelimit=TRUE)
-  timeline.pinera  <- get_timeline(targettwittername.pinera,  n=5, retryonratelimit=TRUE)
-  timeline.lenin   <- get_timeline(targettwittername.lenin,   n=5, retryonratelimit=TRUE)
-  timeline.bukele  <- get_timeline(targettwittername.bukele,  n=5, retryonratelimit=TRUE)
+# Write better names
+  names(nr.followers.presidents)[1] <- "Mexico"
+  names(nr.followers.presidents)[2] <- "Chile"
+  names(nr.followers.presidents)[3] <- "Ecuador"
+  names(nr.followers.presidents)[4] <- "El_Salvador"
+  
+# Calculate total sum of followers
+  tot.followers <- (nr.followers.presidents$Mexico + 
+                  nr.followers.presidents$Chile + 
+                  nr.followers.presidents$Ecuador + 
+                  nr.followers.presidents$El_Salvador)
+  
+# Calculate proportion of followers per president out of total
+  prop_followers <- data.frame(round(nr.followers.presidents$Mexico/sum.followers,2),
+                              round(nr.followers.presidents$Chile/sum.followers,2),
+                              round(nr.followers.presidents$Ecuador/sum.followers,2),
+                              round(nr.followers.presidents$El_Salvador/sum.followers,2))
+ 
+# Targets time lines
+  timeline.obrador <- get_timeline(targettwittername.obrador, n=3200, retryonratelimit=TRUE)
+  timeline.pinera  <- get_timeline(targettwittername.pinera,  n=3200, retryonratelimit=TRUE)
+  timeline.lenin   <- get_timeline(targettwittername.lenin,   n=3200, retryonratelimit=TRUE)
+  timeline.bukele  <- get_timeline(targettwittername.bukele,  n=3200, retryonratelimit=TRUE)
   
 # Get ids of their tweets
   obrador.tweetids <- as.numeric(timeline.obrador$status_id)
@@ -92,7 +115,6 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   
 # Get a vector with of their followers id's
   
-# Of Lopez Obrador
   v.obrador.followers <- as.vector(get_followers(targettwittername.obrador, n = 10))
   v.pinera.followers <- as.vector(get_followers(targettwittername.pinera, n = 10))
   v.lenin.follwers <- as.vector(get_followers(targettwittername.lenin, n = 10))
