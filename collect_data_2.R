@@ -120,7 +120,7 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   v.pinera.followers  <- as.vector(get_followers(targettwittername.pinera, n = 10))
   v.lenin.follwers    <- as.vector(get_followers(targettwittername.lenin, n = 10))
   v.bukele.followers  <- as.vector(get_followers(targettwittername.bukele, n = 10))
-=======
+
 # Targets timelines
   timeline.obrador <- get_timeline(targettwittername.obrador, n=5, retryonratelimit=TRUE)
   timeline.pinera <- get_timeline(targettwittername.pinera, n=5, retryonratelimit=TRUE)
@@ -140,8 +140,6 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   v.pinera.followers <- as.vector(get_followers(targettwittername.pinera, n = 10))
   v.lenin.follwers <- as.vector(get_followers(targettwittername.lenin, n = 10))
   v.bukele.followers <- as.vector(get_followers(targettwittername.bukele, n = 10))
-
->>>>>>> 5ad184a02d2ffbb0c811897b9a5e55ee1db9b837
 
 
 # Save important things
