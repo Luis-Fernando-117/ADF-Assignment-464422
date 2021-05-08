@@ -1,28 +1,43 @@
 ######################################
 # -------- Data Processing -----------
 ######################################
-load("df.obradorfollowers.RData")
-load("user_id_obrador.RData")
-load("v.obradorfollowers.RData")
-load("timeline-obrador-50.RData")
+
+# Load objects created in "collect_data.R" file
+load("v.obrador.followers.RData")
+load("v.pinera.followers.RData")
+load("v.lenin.follwers.RData")
+load("v.bukele.followers.RData")
 
 
 # Combine all the followers ids of the respective presidents into a single data frame
   df.presidents.followers <- data.frame(v.obrador.followers, v.pinera.followers,
                                         v.lenin.follwers, v.bukele.followers)
+  
+  names(df.presidents.followers)[1] <- "Mexico"
+  names(df.presidents.followers)[2] <- "Chile"
+  names(df.presidents.followers)[3] <- "Ecuador"
+  names(df.presidents.followers)[4] <- "El_Salvador"
 
 # ------ Lopez Obrador ------
-# Clean up follower list to exclude those that have never tweeted and restricted access
-user_lookup <- lookup_users(v.obradorfollowers)
-users_with_tweets_and_unprotected <- filter(user_lookup, statuses_count != 0)
-users_with_tweets_and_unprotected <- select(filter(users_with_tweets_and_unprotected, 
-                                                   protected != "TRUE"), user_id)
 
-obrador.followers.cleaned <- filter(targetfollowers, user_id %in% 
-                                      users_with_tweets_and_unprotected$user_id)
+# Clean up follower lists to exclude those followers that have never tweeted and 
+# restricted access
 
+  lst_clean_ids <- list()
+  for (k in 1:ncol(df.presidents.followers)) {
+    user_lookup <- lookup_users(df.presidents.followers[ ,k])
+    users_with_tweets_and_unprotected <- filter(user_lookup, statuses_count != 0)
+    users_with_tweets_and_unprotected <- select(filter(users_with_tweets_and_unprotected, 
+                                                       protected != "TRUE"), user_id)
+    lst_clean_ids[[k]] <- users_with_tweets_and_unprotected
+  }
+  
+followers.cleaned.obrador <- (lst_clean_ids[[1]])
+followers.cleaned.pinera  <- (lst_clean_ids[[2]])
+followers.cleaned.lenin   <- (lst_clean_ids[[3]])
+followers.cleaned.bukele  <- (lst_clean_ids[[4]])
 
-## ----Get a loop to get statuses of all the followers
+## ----Get a loop to get statuses of all the cleaned followers
 
 # Create a vector with filtered followers id's
 v.filtered.followers.ids <- as.vector(as.numeric(obrador.followers.cleaned$user_id))

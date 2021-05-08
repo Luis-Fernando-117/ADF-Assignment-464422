@@ -74,6 +74,7 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   id.lenin   <- l.info.lenin$id
   id.bukele  <- l.info.bukele$id
   
+# Get the id's into a dataframe
   presidents_ids <- data.frame(id.obrador,id.pinera,id.lenin,id.bukele)
 
 # We will see the actual number of followers of these presidents to get 
@@ -84,7 +85,7 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
                                         l.info.pinera$followersCount,
                                         l.info.lenin$followersCount,
                                         l.info.bukele$followersCount)
-# Write better names
+# Write better names of columns
   names(nr.followers.presidents)[1] <- "Mexico"
   names(nr.followers.presidents)[2] <- "Chile"
   names(nr.followers.presidents)[3] <- "Ecuador"
@@ -102,41 +103,37 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
                                round(nr.followers.presidents$Ecuador/sum.followers,2),
                                round(nr.followers.presidents$El_Salvador/sum.followers,2))
  
+  # Write better names of columns
+  names(prop_followers)[1] <- "Mexico"
+  names(prop_followers)[2] <- "Chile"
+  names(prop_followers)[3] <- "Ecuador"
+  names(prop_followers)[4] <- "El_Salvador"
+  
 # Targets time lines
-  timeline.obrador <- get_timeline(targettwittername.obrador, n=3200, retryonratelimit=TRUE)
-  timeline.pinera  <- get_timeline(targettwittername.pinera,  n=3200, retryonratelimit=TRUE)
-  timeline.lenin   <- get_timeline(targettwittername.lenin,   n=3200, retryonratelimit=TRUE)
-  timeline.bukele  <- get_timeline(targettwittername.bukele,  n=3200, retryonratelimit=TRUE)
+  #timeline.obrador <- get_timeline(targettwittername.obrador, n=3200, retryonratelimit=TRUE)
+  #timeline.pinera  <- get_timeline(targettwittername.pinera,  n=3200, retryonratelimit=TRUE)
+  #timeline.lenin   <- get_timeline(targettwittername.lenin,   n=3200, retryonratelimit=TRUE)
+  #timeline.bukele  <- get_timeline(targettwittername.bukele,  n=3200, retryonratelimit=TRUE)
   
 # Get id status of their tweets
-  obrador.tweetids <- as.numeric(timeline.obrador$status_id)
-  pinera.tweetsids <- as.numeric(timeline.pinera$status_id)
-  lenin.tweetsids  <- as.numeric(timeline.lenin$status_id)
-  bukele.tweetsids <- as.numeric(timeline.bukele$status_id)
+  #obrador.tweetids <- as.numeric(timeline.obrador$status_id)
+  #pinera.tweetsids <- as.numeric(timeline.pinera$status_id)
+  #lenin.tweetsids  <- as.numeric(timeline.lenin$status_id)
+  #bukele.tweetsids <- as.numeric(timeline.bukele$status_id)
   
+  # Get a sample of 5,000 followers of the total followers of the presidents
+
 # Get a vector with of their followers id's (here comes in the proportions) !!!!!! CONTINUE HERE
-  v.obrador.followers <- as.vector(get_followers(targettwittername.obrador, n = 10))
-  v.pinera.followers  <- as.vector(get_followers(targettwittername.pinera, n = 10))
-  v.lenin.follwers    <- as.vector(get_followers(targettwittername.lenin, n = 10))
-  v.bukele.followers  <- as.vector(get_followers(targettwittername.bukele, n = 10))
+  v.obrador.followers <- as.vector(get_followers(targettwittername.obrador, n = 5000))
+  v.pinera.followers  <- as.vector(get_followers(targettwittername.pinera, n = 5000))
+  v.lenin.follwers    <- as.vector(get_followers(targettwittername.lenin, n = 5000))
+  v.bukele.followers  <- as.vector(get_followers(targettwittername.bukele, n = 5000))
 
 
 # Save important things
-  save(v.obradorfollowers, file = "v.obradorfollowers.RData")
-  save(df.obrador.followers, file = "df.obradorfollowers.RData")
-  save(obrador.userid, file = "user_id_obrador.RData")
-  save(timeline.obrador, file = "timeline-obrador.RData")
+  save(v.obrador.followers, file = "v.obrador.followers.RData")
+  save(v.pinera.followers, file = "v.pinera.followers.RData")
+  save(v.lenin.follwers, file = "v.lenin.follwers.RData")
+  save(v.bukele.followers, file = "v.bukele.followers.RData")
 
-
-
-########################################
-# Data Analyis part - to be in Rmd file
-#####################################
-load("obrador-followers-cleaned.RData")
-load("df-obrador-followers-tm.RData")
-
-# Get some features out of the tmls data frame
-
-average_text_with <- mean(tmls$display_text_width)
-average_retweet_count <- mean(tmls$retweet_count)
 
