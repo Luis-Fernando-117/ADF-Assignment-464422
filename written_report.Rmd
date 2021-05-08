@@ -28,3 +28,29 @@ Documentation of search_tweets
 
 Documentation of search_twitter
 https://www.rdocumentation.org/packages/twitteR/versions/1.1.9/topics/searchTwitter
+
+Load Libraries 
+```{r}
+library("httr")
+library("jsonlite")
+library("tidyverse")
+library("twitteR")
+library("rtweet")
+library("plyr")
+library("dplyr")
+library("data.table")
+```
+
+Load Objects
+```{r}
+load("obrador-followers-cleaned.RData")
+load("df-obrador-followers-tm.RData")
+```
+
+```{r}
+# Get some features out of the tmls data frame
+average_text_with <- mean(tmls$display_text_width)
+average_retweet_count <- mean(tmls$retweet_count)
+
+```
+
