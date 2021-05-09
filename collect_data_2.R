@@ -176,20 +176,15 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
 ## ---- Get a loop to get statuses of all the cleaned followers of all the presidents 
   
   # Let's first create some empty data frames which will be filled with 
-  # the loops, with followers timeliness information
+  # the loops, with followers time lines information
   df.followers.tm.obrador <- data.frame(matrix(ncol = 90, nrow = 0))
   df.followers.tm.pinera <- data.frame(matrix(ncol = 90, nrow = 0))
   df.followers.tm.lenin <- data.frame(matrix(ncol = 90, nrow = 0))
   df.followers.tm.bukele <- data.frame(matrix(ncol = 90, nrow = 0))
   
-###### Lopez Obrador #####
-
- 
-
-# Create a loop that gets some tweets of the followers fo the target users
+# --- Create a loops that gets some tweets of the followers fo the target users
   
-
-
+###### Lopez Obrador #####
 # Given the max amout of tweets you can request per 15 minutes, we 
 # split the follower id's into 4 chunks 
   
@@ -226,28 +221,69 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
     df.followers.tm.obrador <- rbind(df.followers.tm.obrador, df.follower.tm)
   }
   
-###### Lopez Obrador #####
-  
-  
+  # Save the followers timeline
+  save(df.followers.tm.obrador, file = "df.followers.tm.obrador.RData")
+
   # Filter the observations to include only those tweets that are replies to tweets 
   # made by our target
-  dt.followers.replies.to.obrador <- as.data.table(df.followers.tm)
-  dt.followers.replies.to.obrador <- dt.followers.replies.to.obrador[reply_to_user_id == targettwitteruserid, ]
+  dt.followers.replies.to.obrador <- as.data.table(df.followers.tm.obrador)
+  dt.followers.replies.to.obrador <- dt.followers.replies.to.obrador[reply_to_user_id == targettwittername.obrador, ]
   
-  #It works til here !!!!
+
+  ###### ---- Pinera ---- #####
   
-  statuses_of_followers <- lookup_statuses(v.followers.ids)
+  followers.cleaned.pinera_1 <- slice(followers.cleaned.pinera, 1:1200)
+  followers.cleaned.pinera_2 <- slice(followers.cleaned.pinera, 1201:2400)
+  followers.cleaned.pinera_3 <- slice(followers.cleaned.pinera, 2401:3010)
   
-  #rm(test.timeline.user, dt.followers.responses.to.target)
-  #test.timeline.user <- as.data.table(get_timeline(follower_id, n=2))
-  #test.timeline.user <- test.timeline.user[, list(user_id, text, reply_to_user_id)]
+  # 1st chunk
+  for (i in followers.cleaned.pinera_1) {
+    follower_id <- as.numeric(i)
+    df.follower.tm <- as.data.frame((get_timeline(follower_id, n=15)))
+    df.followers.tm.pinera <- rbind(df.followers.tm.pinera, df.follower.tm)
+  }
   
-  #dt.followers.responses.to.target <- rbind(dt.followers.responses.to.target, test.timeline.user)
+  #2nd chunk
+  for (i in followers.cleaned.pinera_2) {
+    follower_id <- as.numeric(i)
+    df.follower.tm <- as.data.frame((get_timeline(follower_id, n=15)))
+    df.followers.tm.pinera <- rbind(df.followers.tm.pinera, df.follower.tm)
+  }
   
-  obrador.followers.cleaned <- targetfollowers.filtered
-  df.obrador.followers.tm <- df.followers.tm
+  #3d chunk
+  for (i in followers.cleaned.pinera_3) {
+    follower_id <- as.numeric(i)
+    df.follower.tm <- as.data.frame((get_timeline(follower_id, n=15)))
+    df.followers.tm.pinera <- rbind(df.followers.tm.pinera, df.follower.tm)
+  }
   
-  save(obrador.followers.cleaned, file ="obrador-followers-cleaned.RData")
-  save(df.obrador.followers.tm, file = "df-obrador-followers-tm.RData")
+  # Save the followers timeline
+  save(df.followers.tm.pinera, file = "df.followers.tm.pinera.RData")
   
+  ###### ---- Lenin ---- #####
+  
+  followers.cleaned.lenin_1 <- slice(followers.cleaned.lenin, 1:1200)
+  followers.cleaned.lenin_2 <- slice(followers.cleaned.lenin, 1201:2400)
+  followers.cleaned.lenin_3 <- slice(followers.cleaned.lenin, 2401:2701)
+  
+  # 1st chunk
+  for (i in followers.cleaned.lenin_1) {
+    follower_id <- as.numeric(i)
+    df.follower.tm <- as.data.frame((get_timeline(follower_id, n=15)))
+    df.followers.tm.lenin <- rbind(df.followers.tm.lenin, df.follower.tm)
+  }
+  
+  #2nd chunk
+  for (i in followers.cleaned.lenin_2) {
+    follower_id <- as.numeric(i)
+    df.follower.tm <- as.data.frame((get_timeline(follower_id, n=15)))
+    df.followers.tm.lenin <- rbind(df.followers.tm.lenin, df.follower.tm)
+  }
+  
+  #3d chunk
+ #for (i in followers.cleaned.lenin_3) {
+    follower_id <- as.numeric(i)
+    df.follower.tm <- as.data.frame((get_timeline(follower_id, n=15)))
+    df.followers.tm.lenin <- rbind(df.followers.tm.lenin, df.follower.tm)
+  }
   
