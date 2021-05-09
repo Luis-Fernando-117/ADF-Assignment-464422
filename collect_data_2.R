@@ -281,9 +281,47 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   }
   
   #3d chunk
- #for (i in followers.cleaned.lenin_3) {
+ for (i in followers.cleaned.lenin_3) {
     follower_id <- as.numeric(i)
     df.follower.tm <- as.data.frame((get_timeline(follower_id, n=15)))
     df.followers.tm.lenin <- rbind(df.followers.tm.lenin, df.follower.tm)
   }
   
+  # Save the followers timeline
+  save(df.followers.tm.lenin, file = "df.followers.tm.lenin.RData")
+  
+  
+###### ---- Bukele ---- #####
+  
+followers.cleaned.bukele_1 <- slice(followers.cleaned.bukele, 1:900)
+followers.cleaned.bukele_2 <- slice(followers.cleaned.bukele, 901:1800)
+followers.cleaned.bukele_3 <- slice(followers.cleaned.bukele, 1801:2155)
+
+  
+# 1st chunk
+for (i in followers.cleaned.bukele_1) {
+  follower_id <- as.numeric(i)
+  df.follower.tm <- as.data.frame((get_timeline(follower_id, n=15)))
+  df.followers.tm.bukele <- rbind(df.followers.tm.bukele, df.follower.tm)
+}
+
+# 2nd chunk
+for (i in followers.cleaned.bukele_2) {
+  follower_id <- as.numeric(i)
+  df.follower.tm <- as.data.frame((get_timeline(follower_id, n=15)))
+  df.followers.tm.bukele <- rbind(df.followers.tm.bukele, df.follower.tm)
+}
+
+# 3rd chunk
+for (i in followers.cleaned.bukele_3) {
+  follower_id <- as.numeric(i)
+  df.follower.tm <- as.data.frame((get_timeline(follower_id, n=15)))
+  df.followers.tm.bukele <- rbind(df.followers.tm.bukele, df.follower.tm)
+}
+
+# Save the followers timeline
+save(df.followers.tm.bukele, file = "df.followers.tm.bukele.RData")
+
+
+
+
