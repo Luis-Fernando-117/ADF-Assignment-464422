@@ -11,7 +11,7 @@ library("rtweet")
 library("plyr")
 library("dplyr")
 library("data.table")
-
+library("tidytext")
 
 # Load objects created in "collect_data.R" file
 load("v.obrador.followers.RData")
@@ -96,7 +96,6 @@ for (i in followers.cleaned.obrador_4) {
 
 
 
-
 # Filter the observations to include only those tweets that are replies to tweets 
 # made by our target
 dt.followers.replies.to.obrador <- as.data.table(df.followers.tm)
@@ -120,16 +119,21 @@ save(df.obrador.followers.tm, file = "df-obrador-followers-tm.RData")
 
 
 #############################
-# ------- Text preparations
+# ------- Text Mining Preparations
 #############################
 
+# Get a test df, to explore text mining, with a reduced sample
+obrador.followers.tms.test <- slice(df.followers.tm.obrador, 1:50)
+
 # Put tweets into an character object
-text_tweets_obrador <- c()
+text_tweets_obrador <- c(obrador.followers.tms.test$text)
 
 # Turn Tweets into tidy data sets
  
-text_tweets_to_obrador <- tibble(line = 1:4, text = text)
+text_tweets_to_obrador <- tibble(line = 1:50, text = text_tweets_obrador)
 
 
-
+# Create a tibble with the words and their count 
+text_tweets_to_obrador %>%
+  unnest_tokens(word, text)
 
