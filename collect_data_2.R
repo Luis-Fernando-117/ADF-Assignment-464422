@@ -173,7 +173,7 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   followers.cleaned.lenin   <- (lst_clean_ids[[3]])
   followers.cleaned.bukele  <- (lst_clean_ids[[4]])
   
-## ----Get a loop to get statuses of all the cleaned followers
+## ---- Get a loop to get statuses of all the cleaned followers of all the presidents 
   
   # Let's first create some empty data frames which will be filled with 
   # the loops, with followers timeliness information
