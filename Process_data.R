@@ -2,6 +2,17 @@
 # -------- Data Processing -----------
 ######################################
 
+#Load libraries
+library("httr")
+library("jsonlite")
+library("tidyverse")
+library("twitteR")
+library("rtweet")
+library("plyr")
+library("dplyr")
+library("data.table")
+
+
 # Load objects created in "collect_data.R" file
 load("v.obrador.followers.RData")
 load("v.pinera.followers.RData")
@@ -58,14 +69,14 @@ followers.cleaned.obrador_4 <- slice(followers.cleaned.obrador, 1801:2162)
 # 1st chunk
 for (i in followers.cleaned.obrador_1) {
   follower_id <- as.numeric(i)
-  df.follower.tm <- as.data.frame((get_timeline(follower_id, n=30)))
+  df.follower.tm <- as.data.frame((get_timeline(follower_id, n=25)))
   df.followers.tm.obrador <- rbind(df.followers.tm.obrador, df.follower.tm)
 }
 
 #2nd chunk
 for (i in followers.cleaned.obrador_2) {
   follower_id <- as.numeric(i)
-  df.follower.tm <- as.data.frame((get_timeline(follower_id, n=30)))
+  df.follower.tm <- as.data.frame((get_timeline(follower_id, n=25)))
   df.followers.tm.obrador <- rbind(df.followers.tm.obrador, df.follower.tm)
 }
 
@@ -106,3 +117,19 @@ df.obrador.followers.tm <- df.followers.tm
 
 save(obrador.followers.cleaned, file ="obrador-followers-cleaned.RData")
 save(df.obrador.followers.tm, file = "df-obrador-followers-tm.RData")
+
+
+#############################
+# ------- Text preparations
+#############################
+
+# Put tweets into an character object
+text_tweets_obrador <- c()
+
+# Turn Tweets into tidy data sets
+ 
+text_tweets_to_obrador <- tibble(line = 1:4, text = text)
+
+
+
+
