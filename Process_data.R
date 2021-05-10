@@ -79,3 +79,9 @@ data.bukele  <- subset(timeline.bukele, select = c("text", "display_text_width",
   word.count.lenin.followers   <- text.tweets.lenin.followers   %>% unnest_tokens(word, text)
   word.count.bukele.followers  <- text.tweets.bukele.followers  %>% unnest_tokens(word, text)
   
+# Save tibbles with wordcounts
+  save(word.count.obrador.followers, file = "word.count.obrador.followers.RData")
+  save(word.count.pinera.followers,  file = "word.count.pinera.followers.RData")
+  save(word.count.lenin.followers,   file = "word.count.lenin.followers.RData")
+  save(word.count.bukele.followers,  file = "word.count.bukele.followers.RData")
+  

@@ -132,9 +132,9 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
 
 # Save president's time lines
   save(timeline.obrador, file = "timeline.obrador.RData")
-  save(timeline.pinera, file = "timeline.pinera.RData")
-  save(timeline.lenin, file = "timeline.lenin.RData")
-  save(timeline.bukele, file = "timeline.bukele.RData")
+  save(timeline.pinera,  file = "timeline.pinera.RData")
+  save(timeline.lenin,   file = "timeline.lenin.RData")
+  save(timeline.bukele,  file = "timeline.bukele.RData")
   
 # ----------------------------------------------------
   
