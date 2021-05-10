@@ -59,6 +59,7 @@ data.bukele  <- subset(timeline.bukele, select = c("text", "display_text_width",
 #############################
 # -- Text Mining Preparations
 #############################
+### --- Process tweets from followers  
 
 # Put tweets into an character object
   text.tweets.obrador.followers <- c(df.followers.tm.obrador.es$text)
@@ -72,16 +73,28 @@ data.bukele  <- subset(timeline.bukele, select = c("text", "display_text_width",
   text.tweets.lenin.followers   <- tibble(line = 1:1216, text = text.tweets.lenin.followers)
   text.tweets.bukele.followers  <- tibble(line = 1:1168, text = text.tweets.bukele.followers)
   
+# Save the tidy dataframes with tweets
+  save(text.tweets.obrador.followers, file = "text.tweets.obrador.followers.RData")
+  save(text.tweets.pinera.followers,  file = "text.tweets.pinera.followers.RData")
+  save(text.tweets.lenin.followers,   file = "text.tweets.lenin.followers.RData")
+  save(text.tweets.bukele.followers,  file = "text.tweets.bukele.followers.RData")
+  
+  
+### --- Process tweets from presidents accounts
+  
+text.tweets.obrador <- c(data.obrador$text)
+text.tweets.pinera  <- c(data.pinera$text)
+text.tweets.lenin   <- c(data.lenin$text)
+text.tweets.bukele  <- c(data.bukele$text)
+  
+# -- Turning them into tidy data frames
+text.tweets.obrador <- tibble(line = 1:3200, text = text.tweets.obrador)
+text.tweets.pinera  <- tibble(line = 1:3197, text = text.tweets.pinera)
+text.tweets.lenin   <- tibble(line = 1:3199, text = text.tweets.lenin)
+text.tweets.bukele  <- tibble(line = 1:3194, text = text.tweets.bukele)
 
-# Create a tibble with the words and their count 
-  word.count.obrador.followers <- text.tweets.obrador.followers %>% unnest_tokens(word, text)
-  word.count.pinera.followers  <- text.tweets.pinera.followers  %>% unnest_tokens(word, text)
-  word.count.lenin.followers   <- text.tweets.lenin.followers   %>% unnest_tokens(word, text)
-  word.count.bukele.followers  <- text.tweets.bukele.followers  %>% unnest_tokens(word, text)
-  
-# Save tibbles with wordcounts
-  save(word.count.obrador.followers, file = "word.count.obrador.followers.RData")
-  save(word.count.pinera.followers,  file = "word.count.pinera.followers.RData")
-  save(word.count.lenin.followers,   file = "word.count.lenin.followers.RData")
-  save(word.count.bukele.followers,  file = "word.count.bukele.followers.RData")
-  
+# Save the tidy df's with tweets from presidents 
+save(text.tweets.obrador, file = "text.tweets.obrador.RData")
+save(text.tweets.pinera,  file = "text.tweets.pinera.RData")
+save(text.tweets.lenin,   file = "text.tweets.lenin.RData")
+save(text.tweets.bukele,  file = "text.tweets.bukele.RData")

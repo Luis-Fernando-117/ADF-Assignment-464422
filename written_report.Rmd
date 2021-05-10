@@ -43,7 +43,11 @@ library("data.table")
 
 Load Objects
 ```{r}
-
+# Followers tweets
+  load("text.tweets.obrador.followers.RData")
+  load("text.tweets.pinera.followers.RData")
+  load("text.tweets.lenin.followers.RData")
+  load("text.tweets.bukele.followers.RData")
 ```
 
 Create a tibble with the words and their count 
