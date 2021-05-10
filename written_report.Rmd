@@ -30,7 +30,7 @@ Documentation of search_twitter
 https://www.rdocumentation.org/packages/twitteR/versions/1.1.9/topics/searchTwitter
 
 Load Libraries 
-```{r}
+```{r, message=FALSE }
 library("httr")
 library("jsonlite")
 library("tidyverse")
@@ -48,11 +48,26 @@ Load Objects
   load("text.tweets.pinera.followers.RData")
   load("text.tweets.lenin.followers.RData")
   load("text.tweets.bukele.followers.RData")
+  
+# Presidents Tweets
+ load("text.tweets.obrador.RData")
+ load("text.tweets.pinera.RData")
+ load("text.tweets.lenin.RData")
+ load("text.tweets.bukele.RData")
 ```
 
 Create a tibble with the words and their count 
 
 ```{r}
+# For presidents tweets
+  word.count.obrador <- text.tweets.obrador %>% unnest_tokens(word, text)
+  word.count.pinera  <- text.tweets.pinera  %>% unnest_tokens(word, text)
+  word.count.lenin   <- text.tweets.lenin   %>% unnest_tokens(word, text)
+  word.count.bukele  <- text.tweets.bukele  %>% unnest_tokens(word, text)
+```
+
+```{r}
+# For followers tweets
   word.count.obrador.followers <- text.tweets.obrador.followers %>% unnest_tokens(word, text)
   word.count.pinera.followers  <- text.tweets.pinera.followers  %>% unnest_tokens(word, text)
   word.count.lenin.followers   <- text.tweets.lenin.followers   %>% unnest_tokens(word, text)
