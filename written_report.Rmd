@@ -43,9 +43,19 @@ library("data.table")
 
 Load Objects
 ```{r}
-load("obrador-followers-cleaned.RData")
-load("df-obrador-followers-tm.RData")
+
 ```
+
+Create a tibble with the words and their count 
+
+```{r}
+  word.count.obrador.followers <- text.tweets.obrador.followers %>% unnest_tokens(word, text)
+  word.count.pinera.followers  <- text.tweets.pinera.followers  %>% unnest_tokens(word, text)
+  word.count.lenin.followers   <- text.tweets.lenin.followers   %>% unnest_tokens(word, text)
+  word.count.bukele.followers  <- text.tweets.bukele.followers  %>% unnest_tokens(word, text)
+```
+
+
 
 ```{r}
 # Get some features out of the tmls data frame
