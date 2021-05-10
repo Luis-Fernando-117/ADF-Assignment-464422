@@ -60,19 +60,22 @@ data.bukele  <- subset(timeline.bukele, select = c("text", "display_text_width",
 # -- Text Mining Preparations
 #############################
 
-
-# Get a test df, to explore text mining, with a reduced sample
-obrador.followers.tms.test <- slice(df.followers.tm.obrador, 1:50)
-
 # Put tweets into an character object
-text_tweets_obrador <- c(obrador.followers.tms.test$text)
-
+  text.tweets.obrador.followers <- c(df.followers.tm.obrador.es$text)
+  text.tweets.pinera.followers  <- c(df.followers.tm.pinera.es$text)
+  text.tweets.lenin.followers   <- c(df.followers.tm.lenin.es$text)
+  text.tweets.bukele.followers  <- c(df.followers.tm.bukele.es$text)
+  
 # Turn Tweets into tidy data sets
- 
-text_tweets_to_obrador <- tibble(line = 1:50, text = text_tweets_obrador)
-
+  text.tweets.obrador.followers <- tibble(line = 1:2114, text = text.tweets.obrador.followers)
+  text.tweets.pinera.followers  <- tibble(line = 1:1268, text = text.tweets.pinera.followers)
+  text.tweets.lenin.followers   <- tibble(line = 1:1216, text = text.tweets.lenin.followers)
+  text.tweets.bukele.followers  <- tibble(line = 1:1168, text = text.tweets.bukele.followers)
+  
 
 # Create a tibble with the words and their count 
-text_tweets_to_obrador %>%
-  unnest_tokens(word, text)
-
+  word.count.obrador.followers <- text.tweets.obrador.followers %>% unnest_tokens(word, text)
+  word.count.pinera.followers  <- text.tweets.pinera.followers  %>% unnest_tokens(word, text)
+  word.count.lenin.followers   <- text.tweets.lenin.followers   %>% unnest_tokens(word, text)
+  word.count.bukele.followers  <- text.tweets.bukele.followers  %>% unnest_tokens(word, text)
+  
