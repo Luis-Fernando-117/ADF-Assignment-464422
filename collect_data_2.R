@@ -46,7 +46,7 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
 
 
 ################################################
-# --------- SECTION 3 : Collect Data  ----------
+# --------- Step 3 : Collect Data  ----------
 ################################################
 
 ### --------See how many of the followers of a political leader interact with his/her tweets
