@@ -15,7 +15,7 @@ library("tidytext")
 
 
 #############################
-# ------- Text Mining Preparations
+# -- Text Mining Preparations
 #############################
 
 # Get a test df, to explore text mining, with a reduced sample
