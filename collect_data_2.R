@@ -109,11 +109,11 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   names(prop_followers)[3] <- "Ecuador"
   names(prop_followers)[4] <- "El_Salvador"
   
-# Targets time lines
-  #timeline.obrador <- get_timeline(targettwittername.obrador, n=3200, retryonratelimit=TRUE)
-  #timeline.pinera  <- get_timeline(targettwittername.pinera,  n=3200, retryonratelimit=TRUE)
-  #timeline.lenin   <- get_timeline(targettwittername.lenin,   n=3200, retryonratelimit=TRUE)
-  #timeline.bukele  <- get_timeline(targettwittername.bukele,  n=3200, retryonratelimit=TRUE)
+# Presidents time lines
+  timeline.obrador <- get_timeline(targettwittername.obrador, n=3200, retryonratelimit=TRUE)
+  timeline.pinera  <- get_timeline(targettwittername.pinera,  n=3200, retryonratelimit=TRUE)
+  timeline.lenin   <- get_timeline(targettwittername.lenin,   n=3200, retryonratelimit=TRUE)
+  timeline.bukele  <- get_timeline(targettwittername.bukele,  n=3200, retryonratelimit=TRUE)
   
 # Get id status of their tweets
   #obrador.tweetids <- as.numeric(timeline.obrador$status_id)
@@ -123,27 +123,20 @@ setup_twitter_oauth(api_key, api_secret, token, token_secret)
   
   # Get a sample of 5,000 followers of the total followers of the presidents
 
-# Get a vector with of their followers id's (here comes in the proportions) !!!!!! CONTINUE HERE
+# Get a vector with of their followers id's 
   v.obrador.followers <- as.vector(get_followers(targettwittername.obrador, n = 5000))
   v.pinera.followers  <- as.vector(get_followers(targettwittername.pinera, n = 5000))
   v.lenin.follwers    <- as.vector(get_followers(targettwittername.lenin, n = 5000))
   v.bukele.followers  <- as.vector(get_followers(targettwittername.bukele, n = 5000))
 
 
-# Save important things
-  save(v.obrador.followers, file = "v.obrador.followers.RData")
-  save(v.pinera.followers, file = "v.pinera.followers.RData")
-  save(v.lenin.follwers, file = "v.lenin.follwers.RData")
-  save(v.bukele.followers, file = "v.bukele.followers.RData")
+# Save president's time lines
+  save(timeline.obrador, file = "timeline.obrador.RData")
+  save(timeline.pinera, file = "timeline.pinera.RData")
+  save(timeline.lenin, file = "timeline.lenin.RData")
+  save(timeline.bukele, file = "timeline.bukele.RData")
   
 # ----------------------------------------------------
-  
-  # Load objects created in "collect_data.R" file
-  load("v.obrador.followers.RData")
-  load("v.pinera.followers.RData")
-  load("v.lenin.follwers.RData")
-  load("v.bukele.followers.RData")
-  
   
   # Combine all the followers ids of the respective presidents into a single data frame
   df.presidents.followers <- data.frame(v.obrador.followers, v.pinera.followers,

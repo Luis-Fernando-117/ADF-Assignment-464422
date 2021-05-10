@@ -2,7 +2,7 @@
 # -------- Data Processing -----------
 ######################################
 
-#Load libraries
+# --- Load libraries
 library("httr")
 library("jsonlite")
 library("tidyverse")
@@ -13,10 +13,27 @@ library("dplyr")
 library("data.table")
 library("tidytext")
 
+# --- Load files
+load("df.followers.tm.bukele.RData")
+load("df.followers.tm.obrador.RData")
+load("df.followers.tm.lenin.RData")
+load("df.followers.tm.pinera.RData")
+load("timeline.obrador.RData")
+load("timeline.pinera.RData")
+load("timeline.lenin.RData")
+load("timeline.bukele.RData")
+
+
+
+
+
+
+
 
 #############################
 # -- Text Mining Preparations
 #############################
+
 
 # Get a test df, to explore text mining, with a reduced sample
 obrador.followers.tms.test <- slice(df.followers.tm.obrador, 1:50)
