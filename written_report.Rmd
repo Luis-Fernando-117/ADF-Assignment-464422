@@ -74,6 +74,11 @@ Create a tibble with the words and their count
   word.count.bukele.followers  <- text.tweets.bukele.followers  %>% unnest_tokens(word, text)
 ```
 
+Load stop words in Spanish
+```{r}
+
+```
+
 
 
 ```{r}
