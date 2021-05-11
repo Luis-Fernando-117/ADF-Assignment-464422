@@ -59,10 +59,17 @@ Load Objects
 Final Data Preparation (consider moving this to data processing file)
 Merge tweets texts into a single data frame
 ```{r}
+# For followers tweets
 text.tweets.obrador.followers$doc_id <- "Obrador_followers"
 text.tweets.pinera.followers$doc_id  <- "Pinera_followers"
 text.tweets.lenin.followers$doc_id   <- "Lenin_followers"
 text.tweets.bukele.followers$doc_id  <- "Bukele_followers"
+
+# For presidents tweets 
+text.tweets.obrador$doc_id <- "President of Mexico"
+text.tweets.pinera$doc_id  <- "President of Chile"
+text.tweets.lenin$doc_id   <- "President of Ecuador"
+text.tweets.bukele$doc_id  <- "President of El Salvador"
 ```
 
 Convert all the tweets text to lowercase
@@ -82,43 +89,64 @@ text.tweets.bukele$text  <- tolower(text.tweets.bukele$text)
 
 Calculate the length of each tweets
 ```{r}
-text.tweets.obrador.followers$length <- sapply(strsplit(text.tweets.obrador.followers$text, " "), length)
+# For followers tweets 
+text.tweets.obrador.followers$length <- 
+  sapply(strsplit(text.tweets.obrador.followers$text, " "), length)
 
-text.tweets.pinera.followers$length <- sapply(strsplit(text.tweets.pinera.followers$text, " "), length)
+text.tweets.pinera.followers$length <- 
+  sapply(strsplit(text.tweets.pinera.followers$text, " "), length)
 
-text.tweets.lenin.followers$length <- sapply(strsplit(text.tweets.lenin.followers$text, " "), length)
+text.tweets.lenin.followers$length <- 
+  sapply(strsplit(text.tweets.lenin.followers$text, " "), length)
 
-text.tweets.bukele.followers$length <- sapply(strsplit(text.tweets.bukele.followers$text, " "), length)
+text.tweets.bukele.followers$length <- 
+  sapply(strsplit(text.tweets.bukele.followers$text, " "), length)
+
+# For presidents tweets 
+text.tweets.obrador$length <- 
+  sapply(strsplit(text.tweets.obrador$text, " "), length)
+
+text.tweets.pinera$length <- 
+  sapply(strsplit(text.tweets.pinera$text, " "), length)
+
+text.tweets.lenin$length <- 
+  sapply(strsplit(text.tweets.lenin$text, " "), length)
+
+text.tweets.bukele$length <- 
+  sapply(strsplit(text.tweets.bukele$text, " "), length)
 ```
 
 ## Data visualizations
 
-Bind alll the tweets texts into a single df
+Bind all the tweets texts into a single df
 ```{r}
+# For followers tweets
 df.tweets.visualization <- rbind(text.tweets.obrador.followers, text.tweets.pinera.followers)
 df.tweets.visualization <- rbind(df.tweets.visualization, text.tweets.lenin.followers)
 df.tweets.visualization <- rbind(df.tweets.visualization, text.tweets.bukele.followers )
 df.tweets.visualization$line <- NULL
-```
 
-Make a single histgram for the distribition of the tweets of all presidents 
-```{r}
-hist.followers.tweet.lenghts <- ggplot(df.tweets.visualization) + 
-  geom_histogram(aes(x = length, fill = doc_id) , alpha = 0.6, bins = 30)
-hist.followers.tweet.lenghts
-```
-
-Do the same but for the presidents tweets 
-
-
-```{r}
+# For presidents tweets
 df.presidents.tweets.visualization <- rbind(text.tweets.obrador, text.tweets.lenin)
 df.presidents.tweets.visualization <- rbind(df.presidents.tweets.visualization, 
                                             text.tweets.pinera)
 df.presidents.tweets.visualization <- rbind(df.presidents.tweets.visualization,
                                             text.tweets.bukele)
+df.presidents.tweets.visualization$line <- NULL
 ```
 
+Make a single histogram of the tweet lenghts 
+```{r}
+# For followers tweets 
+hist.followers.tweet.lenghts <- ggplot(df.tweets.visualization) + 
+  geom_histogram(aes(x = length, fill = doc_id) , alpha = 0.6, bins = 30)
+hist.followers.tweet.lenghts
+
+# For presidents tweets
+hist.presidents.tweet.lenghts <- ggplot(df.presidents.tweets.visualization) + 
+  geom_histogram(aes(x = length, fill = doc_id) , alpha = 0.6, bins = 30)
+hist.presidents.tweet.lenghts
+```
 
 ## Text Mining with "Udpipe" package
 
@@ -138,39 +166,25 @@ udmodel.bukele.followers  <- udpipe(x = text.tweets.bukele.followers$text, objec
 ```
 
 
-
 Filter the dataframes to exclude stopwords, punctuation and symbols
 ```{r}
-rm(udmodel.obrador.followers.filtered, udmodel.pinera.followers.filtered, udmodel.lenin.followers.filtered, udmodel.bukele.followers.filtered)
 udmodel.obrador.followers.filtered <- filter(udmodel.obrador.followers, 
-                                            (upos != "DET")   & (upos != "SYM") &
-                                            (upos != "PUNCT") & (upos != "NUM") & 
-                                            (upos != "X")     & (upos != "ADP") &
-                                            (upos != "CCONJ") & (upos != "PRON")&
-                                            (upos != "SCONJ") & (upos != "ADV") &
-                                            (upos != "VERB")  & (upos != "PART")&
-                                            (upos != "AUX"))
+                                            upos == "ADJ" | upos == "NOUN" |
+                                            upos == "PROPN" | upos == "INTJ")
 
 udmodel.pinera.followers.filtered <- filter(udmodel.pinera.followers, 
-                                            (upos != "DET")   & (upos != "SYM") &
-                                            (upos != "PUNCT") & (upos != "NUM") & 
-                                            (upos != "X")     & (upos != "ADP") &
-                                            (upos != "CCONJ") & (upos != "PRON")&
-                                            (upos != "SCONJ") & (upos != "ADV"))
+                                            upos == "ADJ" | upos == "NOUN" |
+                                            upos == "PROPN" | upos == "INTJ")
 
 udmodel.lenin.followers.filtered <- filter(udmodel.lenin.followers, 
-                                            (upos != "DET")   & (upos != "SYM") &
-                                            (upos != "PUNCT") & (upos != "NUM") & 
-                                            (upos != "X")     & (upos != "ADP") &
-                                            (upos != "CCONJ") & (upos != "PRON")&
-                                            (upos != "SCONJ") & (upos != "ADV"))
+                                           upos == "ADJ" | upos == "NOUN" |
+                                           upos == "PROPN" | upos == "INTJ")
+                                            
 
 udmodel.bukele.followers.filtered <- filter(udmodel.bukele.followers, 
-                                            (upos != "DET")   & (upos != "SYM") &
-                                            (upos != "PUNCT") & (upos != "NUM") & 
-                                            (upos != "X")     & (upos != "ADP") &
-                                            (upos != "CCONJ") & (upos != "PRON")&
-                                            (upos != "SCONJ") & (upos != "ADV"))
+                                            upos == "ADJ" | upos== "NOUN" |
+                                            upos == "PROPN" | upos == "INTJ")
+                                           
 ```
 
 Term Frequency
@@ -186,7 +200,6 @@ https://universaldependencies.org/u/pos/index.html
 
 Term Frequency
 
--- Remove Stopwords missing
 
 ```{r}
 # For presidents tweets
@@ -198,7 +211,8 @@ Term Frequency
 
 ```{r}
 # For followers tweets
-  word.count.obrador.followers <- text.tweets.obrador.followers %>% unnest_tokens(word, text)
+  word.count.obrador.followers <- text.tweets.obrador.followers %>% 
+  unnest_tokens(word, text)
   word.count.pinera.followers  <- text.tweets.pinera.followers  %>% unnest_tokens(word, text)
   word.count.lenin.followers   <- text.tweets.lenin.followers   %>% unnest_tokens(word, text)
   word.count.bukele.followers  <- text.tweets.bukele.followers  %>% unnest_tokens(word, text)
