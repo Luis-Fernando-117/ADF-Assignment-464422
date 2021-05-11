@@ -93,6 +93,10 @@ text.tweets.pinera  <- tibble(line = 1:3197, text = text.tweets.pinera)
 text.tweets.lenin   <- tibble(line = 1:3199, text = text.tweets.lenin)
 text.tweets.bukele  <- tibble(line = 1:3194, text = text.tweets.bukele)
 
+
+
+
+
 # Save the tidy df's with tweets from presidents 
 save(text.tweets.obrador, file = "text.tweets.obrador.RData")
 save(text.tweets.pinera,  file = "text.tweets.pinera.RData")
