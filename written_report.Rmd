@@ -37,6 +37,7 @@ library("data.table")
 library("tidytext")
 library("textdata")
 library("udpipe")
+library("ggplot2")
 ```
 
 Load Objects
@@ -54,6 +55,7 @@ Load Objects
   load("text.tweets.bukele.RData")
 ```
 
+# Final Data Preparation (consider moving this to data processing file)
 Merge tweets texts into a single data frame
 ```{r}
 text.tweets.obrador.followers$doc_id <- "Obrador_followers"
@@ -62,14 +64,33 @@ text.tweets.lenin.followers$doc_id   <- "Lenin_followers"
 text.tweets.bukele.followers$doc_id  <- "Bukele_followers"
 ```
 
-
 Convert all the tweets text to lowercase
 ```{r}
 text.tweets.obrador.followers$text <- tolower(text.tweets.obrador.followers$text)
 text.tweets.pinera.followers$text  <- tolower(text.tweets.pinera.followers$text)
 text.tweets.lenin.followers$text   <- tolower(text.tweets.lenin.followers$text)
 text.tweets.bukele.followers$text  <- tolower(text.tweets.bukele.followers$text)
+
 ```
+
+Calculate the length of each tweets
+```{r}
+text.tweets.obrador.followers$length <- sapply(strsplit(text.tweets.obrador.followers$text, " "), length)
+
+text.tweets.pinera.followers$length <- sapply(strsplit(text.tweets.pinera.followers$text, " "), length)
+
+text.tweets.lenin.followers$length <- sapply(strsplit(text.tweets.lenin.followers$text, " "), length)
+
+text.tweets.bukele.followers$length <- sapply(strsplit(text.tweets.bukele.followers$text, " "), length)
+```
+
+# Data visualization
+
+```{r}
+ggplot(text.tweets.obrador.followers) + 
+  geom_histogram(aes(x = length), bins = 30)
+```
+
 
 
 # Text Mining with "Udpipe" package
@@ -88,6 +109,8 @@ udmodel.pinera.followers  <- udpipe(x = text.tweets.pinera.followers$text, objec
 udmodel.lenin.followers   <- udpipe(x = text.tweets.lenin.followers$text, object = udmodel)
 udmodel.bukele.followers  <- udpipe(x = text.tweets.bukele.followers$text, object = udmodel)
 ```
+
+
 
 Filter the dataframes to exclude stopwords, punctuation and symbols
 ```{r}
