@@ -19,16 +19,6 @@ information from Twitter that I got from "collect_data.R" script.
 The output should be another .RData file with the preprocessed data that has the data converted
 into data frames ready to analyze.
 
-search_tweets = returns twitter statuses from tweets matching certian words or strings of the past 6-9 days 
-
-SearchTwitter = gives you tweets that contain certain words or phrases
-
-Documentation of search_tweets
-#https://www.rdocumentation.org/packages/rtweet/versions/0.7.0/topics/search_tweets
-
-Documentation of search_twitter
-https://www.rdocumentation.org/packages/twitteR/versions/1.1.9/topics/searchTwitter
-
 Load Libraries 
 ```{r, message=FALSE }
 library("httr")
@@ -39,6 +29,9 @@ library("rtweet")
 library("plyr")
 library("dplyr")
 library("data.table")
+library("tidytext")
+library("textdata")
+library("udpipe")
 ```
 
 Load Objects
@@ -56,7 +49,65 @@ Load Objects
  load("text.tweets.bukele.RData")
 ```
 
-Create a tibble with the words and their count 
+Merge tweets texts into a single data frame
+```{r}
+text.tweets.obrador.followers$doc_id <- "Obrador_followers"
+text.tweets.pinera.followers$doc_id  <- "Pinera_followers"
+text.tweets.lenin.followers$doc_id   <- "Lenin_followers"
+text.tweets.bukele.followers$doc_id  <- "Bukele_followers"
+```
+
+Udpipe
+```{r}
+udmodel <- udpipe_download_model(language = "spanish")
+udmodel
+```
+
+Deploy the package to tokenise, and tag terms in all the tweets from presidents
+followers
+```{r}
+udmodel.obrador.followers <- udpipe(x = text.tweets.obrador.followers$text, object = udmodel)
+udmodel.pinera.followers  <- udpipe(x = text.tweets.pinera.followers$text, object = udmodel)
+udmodel.lenin.followers   <- udpipe(x = text.tweets.lenin.followers$text, object = udmodel)
+udmodel.bukele.followers  <- udpipe(x = text.tweets.bukele.followers$text, object = udmodel)
+```
+
+Filter the dataframes to exclude stopwords, punctuation and symbols
+```{r}
+udmodel.obrador.followers.filtered <- filter(udmodel.obrador.followers, 
+                                            (upos != "DET")   & (upos != "SYM") &
+                                            (upos != "PUNCT") & (upos != "NUM") & 
+                                            (upos != "X")     & (upos != "ADP") &
+                                            (upos != "CCONJ") & (upos != "PRON"))
+
+udmodel.pinera.followers.filtered <- filter(udmodel.pinera.followers, 
+                                            (upos != "DET")   & (upos != "SYM") &
+                                            (upos != "PUNCT") & (upos != "NUM") & 
+                                            (upos != "X")     & (upos != "ADP") &
+                                            (upos != "CCONJ") & (upos != "PRON"))
+
+udmodel.lenin.followers.filtered <- filter(udmodel.lenin.followers, 
+                                            (upos != "DET")   & (upos != "SYM") &
+                                            (upos != "PUNCT") & (upos != "NUM") & 
+                                            (upos != "X")     & (upos != "ADP") &
+                                            (upos != "CCONJ") & (upos != "PRON"))
+
+udmodel.bukele.followers.filtered <- filter(udmodel.bukele.followers, 
+                                            (upos != "DET")   & (upos != "SYM") &
+                                            (upos != "PUNCT") & (upos != "NUM") & 
+                                            (upos != "X")     & (upos != "ADP") &
+                                            (upos != "CCONJ") & (upos != "PRON"))
+```
+
+
+To check the definitions of the upos categories, check
+https://universaldependencies.org/u/pos/index.html
+
+
+
+# Term Frequency
+
+-- Remove Stopwords missing
 
 ```{r}
 # For presidents tweets
@@ -74,11 +125,10 @@ Create a tibble with the words and their count
   word.count.bukele.followers  <- text.tweets.bukele.followers  %>% unnest_tokens(word, text)
 ```
 
-Load stop words in Spanish
-```{r}
 
-```
 
+
+Lets take this approach since we avoid having to remove stopwords 
 
 
 ```{r}
