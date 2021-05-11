@@ -257,7 +257,7 @@ spanish_emotions <- read_csv(link)
 
 
 I think i can just do a join between the dictionary with emotions and the term frequency count, then make an average score grouping by each emotion and displaying that in a plot for all the
-presidents followers and their own tweets. Lets try to fix this  
+presidents followers and their own tweets. 
 
 
 
