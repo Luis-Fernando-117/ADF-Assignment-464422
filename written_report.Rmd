@@ -13,16 +13,16 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
-# Case Description 
-
-## Background: data collection and processing
+# Introduction 
 
 For this notebook, it is needed to load an R.Data file containing all the raw 
 information from Twitter that I got from "collect_data.R" script. 
 The output should be another .RData file with the preprocessed data that has the data converted
 into data frames ready to analyze.
 
-# Preparation 
+# Data aquisition and processing
+
+# Data Analysis 
 
 Load Libraries 
 ```{r, message=FALSE }
@@ -38,6 +38,7 @@ library("tidytext")
 library("textdata")
 library("udpipe")
 library("ggplot2")
+library("hrbrthemes")
 ```
 
 Load Objects
@@ -55,7 +56,7 @@ Load Objects
   load("text.tweets.bukele.RData")
 ```
 
-# Final Data Preparation (consider moving this to data processing file)
+Final Data Preparation (consider moving this to data processing file)
 Merge tweets texts into a single data frame
 ```{r}
 text.tweets.obrador.followers$doc_id <- "Obrador_followers"
@@ -66,11 +67,17 @@ text.tweets.bukele.followers$doc_id  <- "Bukele_followers"
 
 Convert all the tweets text to lowercase
 ```{r}
+# For followers
 text.tweets.obrador.followers$text <- tolower(text.tweets.obrador.followers$text)
 text.tweets.pinera.followers$text  <- tolower(text.tweets.pinera.followers$text)
 text.tweets.lenin.followers$text   <- tolower(text.tweets.lenin.followers$text)
 text.tweets.bukele.followers$text  <- tolower(text.tweets.bukele.followers$text)
 
+# For presidents tweets
+text.tweets.obrador$text <- tolower(text.tweets.obrador$text)
+text.tweets.pinera$text  <- tolower(text.tweets.pinera$text)
+text.tweets.lenin$text   <- tolower(text.tweets.lenin$text)
+text.tweets.bukele$text  <- tolower(text.tweets.bukele$text)
 ```
 
 Calculate the length of each tweets
@@ -84,16 +91,36 @@ text.tweets.lenin.followers$length <- sapply(strsplit(text.tweets.lenin.follower
 text.tweets.bukele.followers$length <- sapply(strsplit(text.tweets.bukele.followers$text, " "), length)
 ```
 
-# Data visualization
+## Data visualizations
+
+Bind alll the tweets texts into a single df
+```{r}
+df.tweets.visualization <- rbind(text.tweets.obrador.followers, text.tweets.pinera.followers)
+df.tweets.visualization <- rbind(df.tweets.visualization, text.tweets.lenin.followers)
+df.tweets.visualization <- rbind(df.tweets.visualization, text.tweets.bukele.followers )
+df.tweets.visualization$line <- NULL
+```
+
+Make a single histgram for the distribition of the tweets of all presidents 
+```{r}
+hist.followers.tweet.lenghts <- ggplot(df.tweets.visualization) + 
+  geom_histogram(aes(x = length, fill = doc_id) , alpha = 0.6, bins = 30)
+hist.followers.tweet.lenghts
+```
+
+Do the same but for the presidents tweets 
+
 
 ```{r}
-ggplot(text.tweets.obrador.followers) + 
-  geom_histogram(aes(x = length), bins = 30)
+df.presidents.tweets.visualization <- rbind(text.tweets.obrador, text.tweets.lenin)
+df.presidents.tweets.visualization <- rbind(df.presidents.tweets.visualization, 
+                                            text.tweets.pinera)
+df.presidents.tweets.visualization <- rbind(df.presidents.tweets.visualization,
+                                            text.tweets.bukele)
 ```
 
 
-
-# Text Mining with "Udpipe" package
+## Text Mining with "Udpipe" package
 
 Define the language of the analysis
 ```{r}
@@ -157,7 +184,7 @@ https://universaldependencies.org/u/pos/index.html
 
 
 
-# Term Frequency
+Term Frequency
 
 -- Remove Stopwords missing
 
@@ -181,8 +208,6 @@ https://universaldependencies.org/u/pos/index.html
 
 
 Lets take this approach since we avoid having to remove stopwords 
-
-
 ```{r}
 # Get some features out of the tmls data frame
 average_text_with <- mean(tmls$display_text_width)
@@ -190,3 +215,6 @@ average_retweet_count <- mean(tmls$retweet_count)
 
 ```
 
+# Discussion 
+
+# References 
