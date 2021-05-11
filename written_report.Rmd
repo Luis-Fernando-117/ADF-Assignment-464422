@@ -97,7 +97,9 @@ udmodel.obrador.followers.filtered <- filter(udmodel.obrador.followers,
                                             (upos != "PUNCT") & (upos != "NUM") & 
                                             (upos != "X")     & (upos != "ADP") &
                                             (upos != "CCONJ") & (upos != "PRON")&
-                                            (upos != "SCONJ") & (upos != "ADV"))
+                                            (upos != "SCONJ") & (upos != "ADV") &
+                                            (upos != "VERB")  & (upos != "PART")&
+                                            (upos != "AUX"))
 
 udmodel.pinera.followers.filtered <- filter(udmodel.pinera.followers, 
                                             (upos != "DET")   & (upos != "SYM") &
