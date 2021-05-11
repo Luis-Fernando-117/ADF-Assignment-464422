@@ -149,6 +149,17 @@ hist.presidents.tweet.lenghts <- ggplot(df.presidents.tweets.visualization) +
 hist.presidents.tweet.lenghts
 ```
 
+
+We can also calculate some basics statistics of the timelines of the presidents 
+! I need to load the actual time lines from the "collect data" file
+```{r}
+# Get some features out of the tmls data frame
+average_text_with <- mean(tmls$display_text_width)
+average_retweet_count <- mean(tmls$retweet_count)
+
+```
+
+
 ## Text Mining with "Udpipe" package
 
 Define the language of the analysis
@@ -189,7 +200,6 @@ udmodel.pinera.followers.filtered  <- filter(udmodel.pinera.followers,
 udmodel.pinera.followers.filtered <- filter(udmodel.pinera.followers.filtered, 
                                              !grepl("@", token))
 
-
 udmodel.lenin.followers.filtered   <- filter(udmodel.lenin.followers, 
                                              upos == "ADJ" | upos == "NOUN" |
                                              upos == "PROPN" | upos == "INTJ")
@@ -201,7 +211,6 @@ udmodel.bukele.followers.filtered  <- filter(udmodel.bukele.followers,
                                              upos == "PROPN" | upos == "INTJ")
 udmodel.bukele.followers.filtered <- filter(udmodel.bukele.followers.filtered, 
                                              !grepl("@", token))
-                                           
 ```
 
 Term Frequency
@@ -212,16 +221,48 @@ term.frequency.lenin.followers   <- txt_freq(udmodel.lenin.followers.filtered$to
 term.frequency.bukele.followers  <- txt_freq(udmodel.bukele.followers.filtered$token)
 ```
 
-Visualize top 20 terms used by president
+Visualize top 20 terms used by presidents followers 
 ```{r}
+# Mexico
 factor(term.frequency.obrador.followers$key, 
                     levels = rev(term.frequency.obrador.followers$key))
-barchart(key ~ freq, data = head(term.frequency.obrador.followers, 20), col = "cadetblue", 
+      barchart(key ~ freq, data = head(term.frequency.obrador.followers, 20), col = "cadetblue", 
          main = "Most occurring terms", xlab = "Freq")
+
+# Chile
+factor(term.frequency.pinera.followers$key, 
+                    levels = rev(term.frequency.pinera.followers$key))
+barchart(key ~ freq, data = head(term.frequency.pinera.followers, 20), col = "cadetblue", 
+         main = "Most occurring terms", xlab = "Freq")
+
+# Ecuador
+factor(term.frequency.lenin.followers$key, 
+                    levels = rev(term.frequency.lenin.followers$key))
+barchart(key ~ freq, data = head(term.frequency.lenin.followers, 20), col = "cadetblue", 
+         main = "Most occurring terms", xlab = "Freq")
+
+# El Salvador
+factor(term.frequency.bukele.followers$key, 
+                    levels = rev(term.frequency.bukele.followers$key))
+barchart(key ~ freq, data = head(term.frequency.bukele.followers, 20), col = "cadetblue", 
+         main = "Most occurring terms", xlab = "Freq")
+
+```
+
+Get emotions from public defined dictionaries of words and its emotions
+```{r}
+link <- "https://raw.githubusercontent.com/JoseCardonaFigueroa/sentiment-analysis-spanish/master/data/emotions.csv"
+spanish_emotions <- read_csv(link)
 ```
 
 
-Term Frequency
+I think i can just do a join between the dictionary with emotions and the term frequency count, then make an average score grouping by each emotion and displaying that in a plot for all the
+presidents followers and their own tweets 
+
+
+
+
+Term Frequency - from Anna 
 
 
 ```{r}
@@ -244,14 +285,10 @@ Term Frequency
 
 
 
-Lets take this approach since we avoid having to remove stopwords 
-```{r}
-# Get some features out of the tmls data frame
-average_text_with <- mean(tmls$display_text_width)
-average_retweet_count <- mean(tmls$retweet_count)
-
-```
-
 # Discussion 
+
+## Limitations 
+- Small sample size due to procesing time
+- Sample is biased in the last 9 days of when tweets were collected, so not representative
 
 # References 
