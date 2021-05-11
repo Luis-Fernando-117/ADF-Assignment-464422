@@ -13,11 +13,16 @@ output:
 editor_options: 
   chunk_output_type: console
 ---
+# Case Description 
+
+## Background: data collection and processing
 
 For this notebook, it is needed to load an R.Data file containing all the raw 
 information from Twitter that I got from "collect_data.R" script. 
 The output should be another .RData file with the preprocessed data that has the data converted
 into data frames ready to analyze.
+
+# Preparation 
 
 Load Libraries 
 ```{r, message=FALSE }
@@ -43,10 +48,10 @@ Load Objects
   load("text.tweets.bukele.followers.RData")
   
 # Presidents Tweets
- load("text.tweets.obrador.RData")
- load("text.tweets.pinera.RData")
- load("text.tweets.lenin.RData")
- load("text.tweets.bukele.RData")
+  load("text.tweets.obrador.RData")
+  load("text.tweets.pinera.RData")
+  load("text.tweets.lenin.RData")
+  load("text.tweets.bukele.RData")
 ```
 
 Merge tweets texts into a single data frame
@@ -57,7 +62,19 @@ text.tweets.lenin.followers$doc_id   <- "Lenin_followers"
 text.tweets.bukele.followers$doc_id  <- "Bukele_followers"
 ```
 
-Udpipe
+
+Convert all the tweets text to lowercase
+```{r}
+text.tweets.obrador.followers$text <- tolower(text.tweets.obrador.followers$text)
+text.tweets.pinera.followers$text  <- tolower(text.tweets.pinera.followers$text)
+text.tweets.lenin.followers$text   <- tolower(text.tweets.lenin.followers$text)
+text.tweets.bukele.followers$text  <- tolower(text.tweets.bukele.followers$text)
+```
+
+
+# Text Mining with "Udpipe" package
+
+Define the language of the analysis
 ```{r}
 udmodel <- udpipe_download_model(language = "spanish")
 udmodel
@@ -74,29 +91,39 @@ udmodel.bukele.followers  <- udpipe(x = text.tweets.bukele.followers$text, objec
 
 Filter the dataframes to exclude stopwords, punctuation and symbols
 ```{r}
+rm(udmodel.obrador.followers.filtered, udmodel.pinera.followers.filtered, udmodel.lenin.followers.filtered, udmodel.bukele.followers.filtered)
 udmodel.obrador.followers.filtered <- filter(udmodel.obrador.followers, 
                                             (upos != "DET")   & (upos != "SYM") &
                                             (upos != "PUNCT") & (upos != "NUM") & 
                                             (upos != "X")     & (upos != "ADP") &
-                                            (upos != "CCONJ") & (upos != "PRON"))
+                                            (upos != "CCONJ") & (upos != "PRON")&
+                                            (upos != "SCONJ") & (upos != "ADV"))
 
 udmodel.pinera.followers.filtered <- filter(udmodel.pinera.followers, 
                                             (upos != "DET")   & (upos != "SYM") &
                                             (upos != "PUNCT") & (upos != "NUM") & 
                                             (upos != "X")     & (upos != "ADP") &
-                                            (upos != "CCONJ") & (upos != "PRON"))
+                                            (upos != "CCONJ") & (upos != "PRON")&
+                                            (upos != "SCONJ") & (upos != "ADV"))
 
 udmodel.lenin.followers.filtered <- filter(udmodel.lenin.followers, 
                                             (upos != "DET")   & (upos != "SYM") &
                                             (upos != "PUNCT") & (upos != "NUM") & 
                                             (upos != "X")     & (upos != "ADP") &
-                                            (upos != "CCONJ") & (upos != "PRON"))
+                                            (upos != "CCONJ") & (upos != "PRON")&
+                                            (upos != "SCONJ") & (upos != "ADV"))
 
 udmodel.bukele.followers.filtered <- filter(udmodel.bukele.followers, 
                                             (upos != "DET")   & (upos != "SYM") &
                                             (upos != "PUNCT") & (upos != "NUM") & 
                                             (upos != "X")     & (upos != "ADP") &
-                                            (upos != "CCONJ") & (upos != "PRON"))
+                                            (upos != "CCONJ") & (upos != "PRON")&
+                                            (upos != "SCONJ") & (upos != "ADV"))
+```
+
+Term Frequency
+```{r}
+term.frequency.obrador.followers <- txt_freq(udmodel.obrador.followers.filtered$token)
 ```
 
 
