@@ -39,6 +39,7 @@ library("textdata")
 library("udpipe")
 library("ggplot2")
 library("hrbrthemes")
+library("lattice")
 ```
 
 Load Objects
@@ -159,43 +160,65 @@ udmodel
 Deploy the package to tokenise, and tag terms in all the tweets from presidents
 followers
 ```{r}
-udmodel.obrador.followers <- udpipe(x = text.tweets.obrador.followers$text, object = udmodel)
-udmodel.pinera.followers  <- udpipe(x = text.tweets.pinera.followers$text, object = udmodel)
-udmodel.lenin.followers   <- udpipe(x = text.tweets.lenin.followers$text, object = udmodel)
-udmodel.bukele.followers  <- udpipe(x = text.tweets.bukele.followers$text, object = udmodel)
+udmodel.obrador.followers <- udpipe(x = text.tweets.obrador.followers$text, 
+                                    object = udmodel)
+udmodel.pinera.followers  <- udpipe(x = text.tweets.pinera.followers$text, 
+                                    object = udmodel)
+udmodel.lenin.followers   <- udpipe(x = text.tweets.lenin.followers$text, 
+                                    object = udmodel)
+udmodel.bukele.followers  <- udpipe(x = text.tweets.bukele.followers$text, 
+                                    object = udmodel)
 ```
 
 
-Filter the dataframes to exclude stopwords, punctuation and symbols
+Filter the data frames to exclude stop words, punctuation and symbols
+
+To check the definitions of the upos categories, check
+https://universaldependencies.org/u/pos/index.html
+
 ```{r}
 udmodel.obrador.followers.filtered <- filter(udmodel.obrador.followers, 
-                                            upos == "ADJ" | upos == "NOUN" |
-                                            upos == "PROPN" | upos == "INTJ")
+                                             upos == "ADJ" | upos == "NOUN" |
+                                             upos == "PROPN" | upos == "INTJ")
+udmodel.obrador.followers.filtered <- filter(udmodel.obrador.followers.filtered, 
+                                             !grepl("@", token))
 
-udmodel.pinera.followers.filtered <- filter(udmodel.pinera.followers, 
-                                            upos == "ADJ" | upos == "NOUN" |
-                                            upos == "PROPN" | upos == "INTJ")
+udmodel.pinera.followers.filtered  <- filter(udmodel.pinera.followers, 
+                                             upos == "ADJ" | upos == "NOUN" |
+                                             upos == "PROPN" | upos == "INTJ")
+udmodel.pinera.followers.filtered <- filter(udmodel.pinera.followers.filtered, 
+                                             !grepl("@", token))
 
-udmodel.lenin.followers.filtered <- filter(udmodel.lenin.followers, 
-                                           upos == "ADJ" | upos == "NOUN" |
-                                           upos == "PROPN" | upos == "INTJ")
+
+udmodel.lenin.followers.filtered   <- filter(udmodel.lenin.followers, 
+                                             upos == "ADJ" | upos == "NOUN" |
+                                             upos == "PROPN" | upos == "INTJ")
+udmodel.lenin.followers.filtered <- filter(udmodel.lenin.followers.filtered, 
+                                             !grepl("@", token))
                                             
-
-udmodel.bukele.followers.filtered <- filter(udmodel.bukele.followers, 
-                                            upos == "ADJ" | upos== "NOUN" |
-                                            upos == "PROPN" | upos == "INTJ")
+udmodel.bukele.followers.filtered  <- filter(udmodel.bukele.followers, 
+                                             nupos == "ADJ" | upos== "NOUN" |
+                                             upos == "PROPN" | upos == "INTJ")
+udmodel.bukele.followers.filtered <- filter(udmodel.bukele.followers.filtered, 
+                                             !grepl("@", token))
                                            
 ```
 
 Term Frequency
 ```{r}
-term.frequency.obrador.followers <- txt_freq(udmodel.obrador.followers.filtered$token)
+term.frequency.obrador.followers <- txt_freq(udmodel.obrador.followers.filtered$token) 
+term.frequency.pinera.followers  <- txt_freq(udmodel.pinera.followers.filtered$token)
+term.frequency.lenin.followers   <- txt_freq(udmodel.lenin.followers.filtered$token)
+term.frequency.bukele.followers  <- txt_freq(udmodel.bukele.followers.filtered$token)
 ```
 
-
-To check the definitions of the upos categories, check
-https://universaldependencies.org/u/pos/index.html
-
+Visualize top 20 terms used by president
+```{r}
+factor(term.frequency.obrador.followers$key, 
+                    levels = rev(term.frequency.obrador.followers$key))
+barchart(key ~ freq, data = head(term.frequency.obrador.followers, 20), col = "cadetblue", 
+         main = "Most occurring terms", xlab = "Freq")
+```
 
 
 Term Frequency
