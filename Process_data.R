@@ -102,6 +102,47 @@ text.tweets.pinera$doc_id  <- "President of Chile"
 text.tweets.lenin$doc_id   <- "President of Ecuador"
 text.tweets.bukele$doc_id  <- "President of El Salvador"
 
+# --- Convert all the tweets text to lowercase
+# For followers
+text.tweets.obrador.followers$text <- tolower(text.tweets.obrador.followers$text)
+text.tweets.pinera.followers$text  <- tolower(text.tweets.pinera.followers$text)
+text.tweets.lenin.followers$text   <- tolower(text.tweets.lenin.followers$text)
+text.tweets.bukele.followers$text  <- tolower(text.tweets.bukele.followers$text)
+
+# For presidents tweets
+text.tweets.obrador$text <- tolower(text.tweets.obrador$text)
+text.tweets.pinera$text  <- tolower(text.tweets.pinera$text)
+text.tweets.lenin$text   <- tolower(text.tweets.lenin$text)
+text.tweets.bukele$text  <- tolower(text.tweets.bukele$text)
+
+
+# --- Calculate the length of each tweets
+
+# For followers tweets 
+text.tweets.obrador.followers$length <- 
+  sapply(strsplit(text.tweets.obrador.followers$text, " "), length)
+
+text.tweets.pinera.followers$length <- 
+  sapply(strsplit(text.tweets.pinera.followers$text, " "), length)
+
+text.tweets.lenin.followers$length <- 
+  sapply(strsplit(text.tweets.lenin.followers$text, " "), length)
+
+text.tweets.bukele.followers$length <- 
+  sapply(strsplit(text.tweets.bukele.followers$text, " "), length)
+
+# For presidents tweets 
+text.tweets.obrador$length <- 
+  sapply(strsplit(text.tweets.obrador$text, " "), length)
+
+text.tweets.pinera$length <- 
+  sapply(strsplit(text.tweets.pinera$text, " "), length)
+
+text.tweets.lenin$length <- 
+  sapply(strsplit(text.tweets.lenin$text, " "), length)
+
+text.tweets.bukele$length <- 
+  sapply(strsplit(text.tweets.bukele$text, " "), length)
 
 # Save the tidy df's with tweets from presidents 
 save(text.tweets.obrador, file = "text.tweets.obrador.RData")
