@@ -103,18 +103,40 @@ hist.presidents.tweet.lenghts
 ```
 
 
-We can also calculate some basics statistics of the timelines of the presidents 
-! I need to load the actual time lines from the "collect data" file
+Basics statistics of the tweeter accounts of the presidents 
 ```{r}
-# Get some features out of the tmls data frame
-average_text_with     <- mean(presidents.timelines$display_text_width)
-average_retweet_count <- mean(presidents.timelines$retweet_count)
+average_tweet_lenght  <- mean(presidents.timelines$display_text_width)
+average_tweet_lenght
+```
 
-# Grooup by president and get those calculations as well then display into a plot 
+```{r}
+average_retweet_count <- mean(presidents.timelines$retweet_count)
+average_retweet_count
+```
+
+Group by president and get those calculations as well then display into a plot 
+```{r}
+presidents.timelines <- as.data.table(presidents.timelines)
+presidents.stats <-     presidents.timelines[ , list(avg_tweet_length = mean(display_text_width),
+                                                     avg_retweets = mean(retweet_count)), 
+                                                     by = screen_name]
+presidents.stats
+```
+
+Bar Chart - Presidents average Tweet lengths 
+```{r}
+ggplot(presidents.stats) + geom_col(aes(x = screen_name, y = avg_tweet_length)) 
+```
+
+Bar Chart - Presidents average re-tweets
+```{r}
+ggplot(presidents.stats) + geom_col(aes(x = screen_name, y = avg_retweets)) 
 ```
 
 
-## Text Mining with "Udpipe" package
+## Text Mining
+
+Given that the tweets we will analyze are in spanish language, we will use a publicly available Natural Language Processing (NLP) package for R, called UDPipe. This package wi
 
 ## Analysis of followers tweets
 
@@ -396,3 +418,4 @@ https://www.tidytextmining.com/sentiment.html
 https://bnosac.github.io/udpipe/docs/doc5.html
 https://www.r-graph-gallery.com/48-grouped-barplot-with-ggplot2.html
 http://www.consulta.mx/index.php/encuestas-e-investigaciones/el-mundo
+https://cran.r-project.org/web/packages/udpipe/vignettes/udpipe-annotation.html#udpipe_the_R_package

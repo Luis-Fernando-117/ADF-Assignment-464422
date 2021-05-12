@@ -153,7 +153,7 @@ presidents.timelines <- rbind(presidents.timelines, timeline.bukele)
 # Save Objetcs for Report 
 #########################
 
-# Save president timelines 
+# Save presidents timelines 
   save(presidents.timelines, file = "presidents.timelines.RData")
 
 # Save the tidy df's with tweets from presidents 
