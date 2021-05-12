@@ -273,13 +273,19 @@ names(spanish_emotions)[2] <- "emotion"
 
 Paste the emotion to the Term Frequency df
 ```{r}
-
 emotion.score <- left_join(countries.term.frequncies, spanish_emotions, by = c("key"))
 emotion.score <- as.data.table(na.omit(emotion.score))
 emotion.score <- emotion.score[ , list(tot_freq = sum(freq), terms_per_emotion = .N), 
                                 by = c("emotion", "country")]
+```
 
+Visualize prevalence of emotions
+```{r}
+# Stacked
+emotions_stacked_plot <- ggplot(emotion.score, aes(fill=country, y=tot_freq,
+                                                    x=emotion)) +    geom_bar(position="stack", stat="identity")
 
+emotions_stacked_plot
 ```
 
 
