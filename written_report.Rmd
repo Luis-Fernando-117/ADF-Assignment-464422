@@ -160,16 +160,29 @@ udmodel
 Deploy the package to tokenise, and tag terms in all the tweets from presidents
 followers
 ```{r}
-udmodel.obrador.followers <- udpipe(x = text.tweets.obrador.followers$text, 
+udmodel.obrador.followers        <- udpipe(x = text.tweets.obrador.followers$text, 
                                     object = udmodel)
-udmodel.pinera.followers  <- udpipe(x = text.tweets.pinera.followers$text, 
-                                    object = udmodel)
-udmodel.lenin.followers   <- udpipe(x = text.tweets.lenin.followers$text, 
-                                    object = udmodel)
-udmodel.bukele.followers  <- udpipe(x = text.tweets.bukele.followers$text, 
-                                    object = udmodel)
-```
+udmodel.obrador.followers$doc_id <- "Mexico_followers"
 
+udmodel.pinera.followers         <- udpipe(x = text.tweets.pinera.followers$text, 
+                                    object = udmodel)
+udmodel.pinera.followers$doc_id  <- "Chile_followers"
+
+udmodel.lenin.followers          <- udpipe(x = text.tweets.lenin.followers$text, 
+                                    object = udmodel)
+udmodel.lenin.followers$doc_id   <- "Ecuador_followers"
+
+udmodel.bukele.followers         <- udpipe(x = text.tweets.bukele.followers$text, 
+                                    object = udmodel)
+udmodel.bukele.followers$doc_id  <- "El_Salvador_followers"
+
+```
+Merge them into a single data frame to then filter more easily
+```{r}
+umodel.presidents.followers <- rbind(udmodel.obrador.followers, udmodel.pinera.followers)
+umodel.presidents.followers <- rbind(umodel.presidents.followers,udmodel.lenin.followers)
+umodel.presidents.followers <- rbind(umodel.presidents.followers,udmodel.bukele.followers)
+```
 
 Filter the data frames to exclude stop words, punctuation and symbols
 
@@ -177,34 +190,23 @@ To check the definitions of the upos categories, check
 https://universaldependencies.org/u/pos/index.html
 
 ```{r}
-udmodel.obrador.followers.filtered <- filter(udmodel.obrador.followers, 
-                                             upos == "ADJ" | upos == "NOUN" |
-                                             upos == "PROPN" | upos == "INTJ")
-udmodel.obrador.followers.filtered <- filter(udmodel.obrador.followers.filtered, 
-                                             !grepl("@", token))
-
-udmodel.pinera.followers.filtered  <- filter(udmodel.pinera.followers, 
-                                             upos == "ADJ" | upos == "NOUN" |
-                                             upos == "PROPN" | upos == "INTJ")
-udmodel.pinera.followers.filtered <- filter(udmodel.pinera.followers.filtered, 
-                                             !grepl("@", token))
-
-udmodel.lenin.followers.filtered   <- filter(udmodel.lenin.followers, 
-                                             upos == "ADJ" | upos == "NOUN" |
-                                             upos == "PROPN" | upos == "INTJ")
-udmodel.lenin.followers.filtered <- filter(udmodel.lenin.followers.filtered, 
-                                             !grepl("@", token))
-                                            
-udmodel.bukele.followers.filtered  <- filter(udmodel.bukele.followers, 
-                                             upos == "ADJ" | upos== "NOUN" |
-                                             upos == "PROPN" | upos == "INTJ")
-udmodel.bukele.followers.filtered <- filter(udmodel.bukele.followers.filtered, 
-                                             !grepl("@", token))
+umodel.presidents.followers.filtered <- filter(umodel.presidents.followers,
+                                               upos == "ADJ" | upos == "NOUN" |
+                                               upos == "PROPN" | upos == "INTJ")
+umodel.presidents.followers.filtered <- filter(umodel.presidents.followers.filtered,
+                                               !grepl("@", token))
 ```
 
 Term Frequency of followers tweets
+--> fix this since we pasted all into a single df
+-- need to filter rows that belong to each president and do text frequency
 ```{r}
-term.frequency.obrador.followers         <- txt_freq(udmodel.obrador.followers.filtered$token) 
+term.frequency.obrador.followers <- txt_freq()
+filter(umodel.presidents.followers.filtered,
+                                           doc_id == "Mexico_followers") %>% select(token)
+
+                                             
+
 term.frequency.obrador.followers$country <- "Mexico"
 
 term.frequency.pinera.followers          <- txt_freq(udmodel.pinera.followers.filtered$token)
@@ -312,7 +314,7 @@ umodel.presidents.filtered <- filter(umodel.presidents,
 umodel.presidents.filtered <- filter(umodel.presidents.filtered, 
                                              !grepl("@", token))
 ```
-
+.... continue with Term Frequencies 
 
 # Discussion 
 
