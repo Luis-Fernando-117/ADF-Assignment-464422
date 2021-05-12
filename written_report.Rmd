@@ -150,6 +150,7 @@ average_retweet_count <- mean(tmls$retweet_count)
 
 ## Text Mining with "Udpipe" package
 
+## Analysis of followers tweets
 Define the language of the analysis
 ```{r}
 udmodel <- udpipe_download_model(language = "spanish")
@@ -261,50 +262,56 @@ names(spanish_emotions)[2] <- "emotion"
 
 Paste the emotion to the Term Frequency df
 ```{r}
-emotion.score <- left_join(countries.term.frequncies, spanish_emotions, by = c("key"))
-emotion.score <- as.data.table(na.omit(emotion.score))
-emotion.score <- emotion.score[ , list(tot_freq = sum(freq), terms_per_emotion = .N), 
+emotion.score.followers <- left_join(countries.term.frequncies, spanish_emotions, by = c("key"))
+emotion.score.followers <- as.data.table(na.omit(emotion.score.followers))
+emotion.score.followers <- emotion.score.followers[ , list(tot_freq = sum(freq), terms_per_emotion = .N), 
                                 by = c("emotion", "country")]
 ```
 
-Visualize prevalence of emotions
+Visualize prevalence of emotions of followers
 ```{r}
 # Stacked
-emotions_stacked_plot <- ggplot(emotion.score, aes(fill=country, y=tot_freq,
-                                                    x=emotion)) +    geom_bar(position="stack", stat="identity")
+emotions_stacked_plot <- ggplot(emotion.score.followers, 
+                                aes(fill=country, y=tot_freq, x=emotion)) + 
+                                geom_bar(position="stack", stat="identity")
 
 emotions_stacked_plot
 ```
 
 
-I think i can just do a join between the dictionary with emotions and the term frequency count, then make an average score grouping by each emotion and displaying that in a plot for all the
-presidents followers and their own tweets. 
-
-
-
-
-
-Term Frequency - from Anna 
-
-
+## Analysis of presidents tweets
 ```{r}
-# For presidents tweets
-  word.count.obrador <- text.tweets.obrador %>% unnest_tokens(word, text)
-  word.count.pinera  <- text.tweets.pinera  %>% unnest_tokens(word, text)
-  word.count.lenin   <- text.tweets.lenin   %>% unnest_tokens(word, text)
-  word.count.bukele  <- text.tweets.bukele  %>% unnest_tokens(word, text)
+udmodel.obrador        <- udpipe(x = text.tweets.obrador$text, 
+                                    object = udmodel)
+udmodel.obrador$doc_id <- "Mexico"
+
+udmodel.pinera         <- udpipe(x = text.tweets.pinera$text, 
+                                    object = udmodel)
+udmodel.pinera$doc_id  <- "Chile"
+
+udmodel.lenin          <- udpipe(x = text.tweets.lenin$text, 
+                                    object = udmodel)
+udmodel.lenin$doc_id   <- "Ecuador"
+
+udmodel.bukele         <- udpipe(x = text.tweets.bukele$text, 
+                                    object = udmodel)
+udmodel.bukele$doc_id  <- "El Salvador"
+
+```
+Merge them into a single data frame to then filter more easily
+```{r}
+umodel.presidents <- rbind(udmodel.obrador, udmodel.pinera)
+umodel.presidents <- rbind(umodel.presidents,udmodel.lenin)
+umodel.presidents <- rbind(umodel.presidents,udmodel.bukele)
 ```
 
 ```{r}
-# For followers tweets
-  word.count.obrador.followers <- text.tweets.obrador.followers %>% 
-  unnest_tokens(word, text)
-  word.count.pinera.followers  <- text.tweets.pinera.followers  %>% unnest_tokens(word, text)
-  word.count.lenin.followers   <- text.tweets.lenin.followers   %>% unnest_tokens(word, text)
-  word.count.bukele.followers  <- text.tweets.bukele.followers  %>% unnest_tokens(word, text)
+umodel.presidents.filtered <- filter(umodel.presidents, 
+                                             upos == "ADJ" | upos == "NOUN" |
+                                             upos == "PROPN" | upos == "INTJ")
+umodel.presidents.filtered <- filter(umodel.presidents.filtered, 
+                                             !grepl("@", token))
 ```
-
-
 
 
 # Discussion 
