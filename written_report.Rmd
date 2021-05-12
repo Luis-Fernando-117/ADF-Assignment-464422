@@ -284,7 +284,7 @@ emotion.score.followers <- emotion.score.followers[ ,list(tot_freq = sum(freq), 
 Visualize prevalence of emotions of followers
 ```{r}
 # Stacked
-emotions_stacked_plot <- ggplot(emotion.score.followers, 
+emotions_followers_stacked_plot <- ggplot(emotion.score.followers, 
                                 aes(fill=country, y=tot_freq, x=emotion)) + 
                                 geom_bar(position="stack", stat="identity")
 
@@ -325,13 +325,73 @@ umodel.presidents.filtered <- filter(umodel.presidents,
 umodel.presidents.filtered <- filter(umodel.presidents.filtered, 
                                              !grepl("@", token))
 ```
-.... continue with Term Frequencies 
+
+Term Frequency of president Tweets
+```{r}
+# Mexico
+term.frequency.mexico.president            <- umodel.presidents.filtered %>% 
+                                              filter(doc_id == "Mexico")
+term.frequency.mexico.president            <- txt_freq(term.frequency.mexico.president$token)
+term.frequency.mexico.president$president  <- "Mexico"
+
+# Chile
+term.frequency.chile.president             <- umodel.presidents.filtered %>% 
+                                              filter(doc_id == "Chile")
+term.frequency.chile.president             <- txt_freq(term.frequency.chile.president$token)
+term.frequency.chile.president$president   <- "Chile"
+
+# Ecuador 
+term.frequency.ecuador.president           <- umodel.presidents.filtered %>% 
+                                              filter(doc_id == "Ecuador")
+term.frequency.ecuador.president           <- txt_freq(term.frequency.ecuador.president$token)
+term.frequency.ecuador.president$president <- "Ecuador"
+
+# El Salvador
+term.frequency.elsalvador.president         <- umodel.presidents.filtered %>% 
+                                              filter(doc_id == "El Salvador")
+term.frequency.elsalvador.president         <- txt_freq(term.frequency.elsalvador.president$token)
+term.frequency.elsalvador.president$president <- "Ecuador"
+```
+
+```{r}
+# Merging presidents frequnecies 
+presidents.term.frequencies <- rbind(term.frequency.mexico.president, term.frequency.chile.president)
+presidents.term.frequencies <- rbind(presidents.term.frequencies,term.frequency.ecuador.president)
+presidents.term.frequencies <- rbind(presidents.term.frequencies,term.frequency.elsalvador.president )
+```
+
+```{r}
+# Joing the emtion to the words
+emotion.score.presidents <- left_join(presidents.term.frequencies, spanish_emotions, by = "key")
+emotion.score.presidents <-  as.data.table(na.omit(emotion.score.presidents))
+emotion.score.presidents <- emotion.score.presidents[ ,list(tot_freq = sum(freq), 
+                                                      terms_per_emotion = .N), 
+                                                      by = c("emotion", "president")]
+```
+
+```{r}
+# Stacked bar chart
+emotions_presidents_stacked_plot <- ggplot(emotion.score.presidents, 
+                                aes(fill=president, y=tot_freq, x=emotion)) + 
+                                geom_bar(position="stack", stat="identity")
+
+emotions_stacked_plot
+```
+
+Compare the plots
+```{r}
+
+```
+
+
+
 
 # Discussion 
 
 ## Limitations 
 - Small sample size due to procesing time
 - Sample is biased in the last 9 days of when tweets were collected, so not representative
+  - empahsis in covid, vaccination, lockdown,
 
 # References 
 
