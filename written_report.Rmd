@@ -230,37 +230,46 @@ Visualize top 20 terms used by presidents followers
 # Mexico
 factor(term.frequency.mexico.followers$key, 
                     levels = rev(term.frequency.mexico.followers$key))
-      barchart(key ~ freq, data = head(term.frequency.mexico.followers, 20), col = "cadetblue", 
-         main = "Most occurring terms", xlab = "Freq")
+      barchart(key ~ freq, data = head(term.frequency.mexico.followers, 10), col = "cadetblue", 
+         main = "Most occurring terms - Mexico", xlab = "Freq")
 ```
-
+We can see that followers of the Mexican president seem to be very grateful in general. The word "gracias", Spanish for "Thank you", is the most frequent by far. Followed by "day", "money" and "president". ("dia", "dinero", "presidente")
 
 ```{r}
 # Chile
 factor(term.frequency.chile.followers$key, 
                     levels = rev(term.frequency.chile.followers$key))
-barchart(key ~ freq, data = head(term.frequency.chile.followers, 20), col = "cadetblue", 
-         main = "Most occurring terms", xlab = "Freq")
+barchart(key ~ freq, data = head(term.frequency.chile.followers, 10), col = "cadetblue", 
+         main = "Most occurring terms - Chile", xlab = "Freq")
 ```
+When looking at the bar chart of the followers of the Chilean president we can see something similar. The word for "Thank you" ("gracias") is by far the most frequent. Followed by "favor", "people", "day" and "bond". 
 
 
 ```{r}
 # Ecuador
 factor(term.frequency.ecuador.followers$key, 
                     levels = rev(term.frequency.ecuador.followers$key))
-barchart(key ~ freq, data = head(term.frequency.ecuador.followers, 20), col = "cadetblue", 
-         main = "Most occurring terms", xlab = "Freq")
+barchart(key ~ freq, data = head(term.frequency.ecuador.followers, 10), col = "cadetblue", 
+         main = "Most occurring terms - Ecuador", xlab = "Freq")
 ```
-
+Interestingly, the followers of the Ecuatorian president seem to talk a lot about god. This word is the most frequent by far in the sample, followed again by "thank you", and "favour".
 
 ```{r}
 # El Salvador
 factor(term.frequency.elsalvador.followers$key, 
                     levels = rev(term.frequency.elsalvador.followers$key))
-barchart(key ~ freq, data = head(term.frequency.elsalvador.followers, 20), col = "cadetblue", 
-         main = "Most occurring terms", xlab = "Freq")
+barchart(key ~ freq, data = head(term.frequency.elsalvador.followers, 10), col = "cadetblue", 
+         main = "Most occurring terms - El Salvador", xlab = "Freq")
 
 ```
+Lastly, and interestingly the words "god" and "thank you" are the two most frequent in the sample of the Salvadorean President. These are followed by "hours", "day", "people" and "life".
+
+Based on these preliminary analysis we can see that the followers of these presidents seem to inlcude a lot in their tweets somethign about "god" and seem to express a lot of gratitude ("Thank you"). 
+
+Note that knowing, the term frequencies can not tell us much about the differences in sentiment across all tweets. The ony inshigt we can derive is that the sample seems to be homogeneous on the most often used words such as "Thank you", "god", "day" and "favour". 
+
+Because of this, we will now proceed to measure the sentiment of the tweets themselves. To do so, we download a dataframe containing words and the emption they belong to from a public repository on GitHub. This specific dicionary comes in very handy since it has the term in Spanish and the corresponsing emotion in English. 
+
 
 Get emotions from public defined dictionaries of words and its emotions
 ```{r}
