@@ -73,12 +73,7 @@ data.bukele  <- subset(timeline.bukele, select = c("text", "display_text_width",
   text.tweets.lenin.followers   <- tibble(line = 1:1216, text = text.tweets.lenin.followers)
   text.tweets.bukele.followers  <- tibble(line = 1:1168, text = text.tweets.bukele.followers)
   
-# Save the tidy dataframes with tweets
-  save(text.tweets.obrador.followers, file = "text.tweets.obrador.followers.RData")
-  save(text.tweets.pinera.followers,  file = "text.tweets.pinera.followers.RData")
-  save(text.tweets.lenin.followers,   file = "text.tweets.lenin.followers.RData")
-  save(text.tweets.bukele.followers,  file = "text.tweets.bukele.followers.RData")
-  
+
   
 ### --- Process tweets from presidents accounts
   
@@ -94,7 +89,18 @@ text.tweets.lenin   <- tibble(line = 1:3199, text = text.tweets.lenin)
 text.tweets.bukele  <- tibble(line = 1:3194, text = text.tweets.bukele)
 
 
+# Additional column adding the president the observations belong to
+# For followers tweets
+text.tweets.obrador.followers$doc_id <- "Obrador_followers"
+text.tweets.pinera.followers$doc_id  <- "Pinera_followers"
+text.tweets.lenin.followers$doc_id   <- "Lenin_followers"
+text.tweets.bukele.followers$doc_id  <- "Bukele_followers"
 
+# For presidents tweets 
+text.tweets.obrador$doc_id <- "President of Mexico"
+text.tweets.pinera$doc_id  <- "President of Chile"
+text.tweets.lenin$doc_id   <- "President of Ecuador"
+text.tweets.bukele$doc_id  <- "President of El Salvador"
 
 
 # Save the tidy df's with tweets from presidents 
@@ -102,3 +108,9 @@ save(text.tweets.obrador, file = "text.tweets.obrador.RData")
 save(text.tweets.pinera,  file = "text.tweets.pinera.RData")
 save(text.tweets.lenin,   file = "text.tweets.lenin.RData")
 save(text.tweets.bukele,  file = "text.tweets.bukele.RData")
+
+# Save the tidy dataframes with tweets
+save(text.tweets.obrador.followers, file = "text.tweets.obrador.followers.RData")
+save(text.tweets.pinera.followers,  file = "text.tweets.pinera.followers.RData")
+save(text.tweets.lenin.followers,   file = "text.tweets.lenin.followers.RData")
+save(text.tweets.bukele.followers,  file = "text.tweets.bukele.followers.RData")

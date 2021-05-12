@@ -57,21 +57,7 @@ Load Objects
   load("text.tweets.bukele.RData")
 ```
 
-Final Data Preparation (consider moving this to data processing file)
-Merge tweets texts into a single data frame
-```{r}
-# For followers tweets
-text.tweets.obrador.followers$doc_id <- "Obrador_followers"
-text.tweets.pinera.followers$doc_id  <- "Pinera_followers"
-text.tweets.lenin.followers$doc_id   <- "Lenin_followers"
-text.tweets.bukele.followers$doc_id  <- "Bukele_followers"
-
-# For presidents tweets 
-text.tweets.obrador$doc_id <- "President of Mexico"
-text.tweets.pinera$doc_id  <- "President of Chile"
-text.tweets.lenin$doc_id   <- "President of Ecuador"
-text.tweets.bukele$doc_id  <- "President of El Salvador"
-```
+Final Data Preparation
 
 Convert all the tweets text to lowercase
 ```{r}
@@ -142,7 +128,9 @@ Make a single histogram of the tweet lenghts
 hist.followers.tweet.lenghts <- ggplot(df.tweets.visualization) + 
   geom_histogram(aes(x = length, fill = doc_id) , alpha = 0.6, bins = 30)
 hist.followers.tweet.lenghts
+```
 
+```{r}
 # For presidents tweets
 hist.presidents.tweet.lenghts <- ggplot(df.presidents.tweets.visualization) + 
   geom_histogram(aes(x = length, fill = doc_id) , alpha = 0.6, bins = 30)
@@ -207,7 +195,7 @@ udmodel.lenin.followers.filtered <- filter(udmodel.lenin.followers.filtered,
                                              !grepl("@", token))
                                             
 udmodel.bukele.followers.filtered  <- filter(udmodel.bukele.followers, 
-                                             nupos == "ADJ" | upos== "NOUN" |
+                                             upos == "ADJ" | upos== "NOUN" |
                                              upos == "PROPN" | upos == "INTJ")
 udmodel.bukele.followers.filtered <- filter(udmodel.bukele.followers.filtered, 
                                              !grepl("@", token))
