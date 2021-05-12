@@ -314,3 +314,8 @@ Term Frequency - from Anna
 - Sample is biased in the last 9 days of when tweets were collected, so not representative
 
 # References 
+
+https://www.tidytextmining.com/sentiment.html
+https://bnosac.github.io/udpipe/docs/doc5.html
+https://www.r-graph-gallery.com/48-grouped-barplot-with-ggplot2.html
+http://www.consulta.mx/index.php/encuestas-e-investigaciones/el-mundo
