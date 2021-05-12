@@ -253,6 +253,24 @@ Get emotions from public defined dictionaries of words and its emotions
 ```{r}
 link <- "https://raw.githubusercontent.com/JoseCardonaFigueroa/sentiment-analysis-spanish/master/data/emotions.csv"
 spanish_emotions <- read_csv(link)
+# Renaming columns
+names(spanish_emotions)[1] <- "key"
+names(spanish_emotions)[2] <- "emotion"
+```
+
+Paste the emotion to the Term Frequency df
+```{r}
+
+rm(emotion.score)
+emotion.score <- left_join(term.frequency.obrador.followers, 
+                                         spanish_emotions, by = "key")
+
+emotion.score <- na.omit(emotion.score)
+
+emotion.score <- emotion.score %>% group_by(emotion) %>% summarise(tot_freq = sum())
+
+
+
 ```
 
 
