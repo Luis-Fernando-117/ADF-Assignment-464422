@@ -177,6 +177,7 @@ udmodel.bukele.followers         <- udpipe(x = text.tweets.bukele.followers$text
 udmodel.bukele.followers$doc_id  <- "El_Salvador_followers"
 
 ```
+
 Merge them into a single data frame to then filter more easily
 ```{r}
 umodel.presidents.followers <- rbind(udmodel.obrador.followers, udmodel.pinera.followers)
@@ -201,54 +202,56 @@ Term Frequency of followers tweets
 --> fix this since we pasted all into a single df
 -- need to filter rows that belong to each president and do text frequency
 ```{r}
-term.frequency.obrador.followers <- txt_freq()
-filter(umodel.presidents.followers.filtered,
-                                           doc_id == "Mexico_followers") %>% select(token)
+# Mexico
+term.frequency.mexico.followers <- umodel.presidents.followers.filtered %>% 
+                                      filter(doc_id == "Mexico_followers")
+term.frequency.mexico.followers <- txt_freq(term.frequency.mexico.followers$token)
+term.frequency.mexico.followers$country <- "Mexico"
 
-                                             
-
-term.frequency.obrador.followers$country <- "Mexico"
-
-term.frequency.pinera.followers          <- txt_freq(udmodel.pinera.followers.filtered$token)
-term.frequency.pinera.followers$country  <- "Chile"
-
-term.frequency.lenin.followers           <- txt_freq(udmodel.lenin.followers.filtered$token)
-term.frequency.lenin.followers$country   <- "Ecuador"
-
-term.frequency.bukele.followers          <- txt_freq(udmodel.bukele.followers.filtered$token)
-term.frequency.bukele.followers$country  <- "El Salvador"
+# Chile
+term.frequency.chile.followers <- umodel.presidents.followers.filtered %>% 
+                                     filter(doc_id == "Chile_followers")
+term.frequency.chile.followers <- txt_freq(term.frequency.chile.followers$token)
+term.frequency.chile.followers$country <- "Chile"
 
 
-# Merging rows into a single data frame
-countries.term.frequncies <- rbind(term.frequency.obrador.followers, term.frequency.pinera.followers)
-countries.term.frequncies <- rbind(countries.term.frequncies, term.frequency.lenin.followers)
-countries.term.frequncies <- rbind(countries.term.frequncies, term.frequency.bukele.followers)
+# Ecuador
+term.frequency.ecuador.followers <- umodel.presidents.followers.filtered %>% 
+                                      filter(doc_id == "Ecuador_followers")
+term.frequency.ecuador.followers <- txt_freq(term.frequency.ecuador.followers$token)
+term.frequency.ecuador.followers$country <- "Ecuador"
+
+# El Salvador
+term.frequency.elsalvador.followers <- umodel.presidents.followers.filtered %>% 
+                                         filter(doc_id == "El_Salvador_followers")
+term.frequency.elsalvador.followers <- txt_freq(term.frequency.elsalvador.followers$token)
+term.frequency.elsalvador.followers$country <- "El_Savador"
 ```
 
 Visualize top 20 terms used by presidents followers 
 ```{r}
 # Mexico
-factor(term.frequency.obrador.followers$key, 
-                    levels = rev(term.frequency.obrador.followers$key))
-      barchart(key ~ freq, data = head(term.frequency.obrador.followers, 20), col = "cadetblue", 
+factor(term.frequency.mexico.followers$key, 
+                    levels = rev(term.frequency.mexico.followers$key))
+      barchart(key ~ freq, data = head(term.frequency.mexico.followers, 20), col = "cadetblue", 
          main = "Most occurring terms", xlab = "Freq")
 
 # Chile
-factor(term.frequency.pinera.followers$key, 
-                    levels = rev(term.frequency.pinera.followers$key))
-barchart(key ~ freq, data = head(term.frequency.pinera.followers, 20), col = "cadetblue", 
+factor(term.frequency.chile.followers$key, 
+                    levels = rev(term.frequency.chile.followers$key))
+barchart(key ~ freq, data = head(term.frequency.chile.followers, 20), col = "cadetblue", 
          main = "Most occurring terms", xlab = "Freq")
 
 # Ecuador
-factor(term.frequency.lenin.followers$key, 
-                    levels = rev(term.frequency.lenin.followers$key))
-barchart(key ~ freq, data = head(term.frequency.lenin.followers, 20), col = "cadetblue", 
+factor(term.frequency.ecuador.followers$key, 
+                    levels = rev(term.frequency.ecuador.followers$key))
+barchart(key ~ freq, data = head(term.frequency.ecuador.followers, 20), col = "cadetblue", 
          main = "Most occurring terms", xlab = "Freq")
 
 # El Salvador
-factor(term.frequency.bukele.followers$key, 
-                    levels = rev(term.frequency.bukele.followers$key))
-barchart(key ~ freq, data = head(term.frequency.bukele.followers, 20), col = "cadetblue", 
+factor(term.frequency.elsalvador.followers$key, 
+                    levels = rev(term.frequency.elsalvador.followers$key))
+barchart(key ~ freq, data = head(term.frequency.elsalvador.followers, 20), col = "cadetblue", 
          main = "Most occurring terms", xlab = "Freq")
 
 ```
@@ -262,12 +265,20 @@ names(spanish_emotions)[1] <- "key"
 names(spanish_emotions)[2] <- "emotion"
 ```
 
+```{r}
+# Merging rows into a single data frame
+followers.term.frequncies <- rbind(term.frequency.mexico.followers, term.frequency.chile.followers)
+followers.term.frequncies <- rbind(followers.term.frequncies, term.frequency.ecuador.followers)
+followers.term.frequncies <- rbind(followers.term.frequncies, term.frequency.elsalvador.followers)
+```
+
+
 Paste the emotion to the Term Frequency df
 ```{r}
-emotion.score.followers <- left_join(countries.term.frequncies, spanish_emotions, by = c("key"))
+emotion.score.followers <- left_join(followers.term.frequncies, spanish_emotions, by = c("key"))
 emotion.score.followers <- as.data.table(na.omit(emotion.score.followers))
-emotion.score.followers <- emotion.score.followers[ , list(tot_freq = sum(freq), terms_per_emotion = .N), 
-                                by = c("emotion", "country")]
+emotion.score.followers <- emotion.score.followers[ ,list(tot_freq = sum(freq), terms_per_emotion = .N),
+                                                    by = c("emotion", "country")]
 ```
 
 Visualize prevalence of emotions of followers
