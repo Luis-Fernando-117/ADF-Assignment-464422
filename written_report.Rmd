@@ -213,12 +213,25 @@ udmodel.bukele.followers.filtered <- filter(udmodel.bukele.followers.filtered,
                                              !grepl("@", token))
 ```
 
-Term Frequency
+Term Frequency of followers tweets
 ```{r}
-term.frequency.obrador.followers <- txt_freq(udmodel.obrador.followers.filtered$token) 
-term.frequency.pinera.followers  <- txt_freq(udmodel.pinera.followers.filtered$token)
-term.frequency.lenin.followers   <- txt_freq(udmodel.lenin.followers.filtered$token)
-term.frequency.bukele.followers  <- txt_freq(udmodel.bukele.followers.filtered$token)
+term.frequency.obrador.followers         <- txt_freq(udmodel.obrador.followers.filtered$token) 
+term.frequency.obrador.followers$country <- "Mexico"
+
+term.frequency.pinera.followers          <- txt_freq(udmodel.pinera.followers.filtered$token)
+term.frequency.pinera.followers$country  <- "Chile"
+
+term.frequency.lenin.followers           <- txt_freq(udmodel.lenin.followers.filtered$token)
+term.frequency.lenin.followers$country   <- "Ecuador"
+
+term.frequency.bukele.followers          <- txt_freq(udmodel.bukele.followers.filtered$token)
+term.frequency.bukele.followers$country  <- "El Salvador"
+
+
+# Merging rows into a single data frame
+countries.term.frequncies <- rbind(term.frequency.obrador.followers, term.frequency.pinera.followers)
+countries.term.frequncies <- rbind(countries.term.frequncies, term.frequency.lenin.followers)
+countries.term.frequncies <- rbind(countries.term.frequncies, term.frequency.bukele.followers)
 ```
 
 Visualize top 20 terms used by presidents followers 
@@ -261,14 +274,10 @@ names(spanish_emotions)[2] <- "emotion"
 Paste the emotion to the Term Frequency df
 ```{r}
 
-rm(emotion.score)
-emotion.score <- left_join(term.frequency.obrador.followers, 
-                                         spanish_emotions, by = "key")
-
-emotion.score <- na.omit(emotion.score)
-
-emotion.score <- emotion.score %>% group_by(emotion) %>% summarise(tot_freq = sum())
-
+emotion.score <- left_join(countries.term.frequncies, spanish_emotions, by = c("key"))
+emotion.score <- as.data.table(na.omit(emotion.score))
+emotion.score <- emotion.score[ , list(tot_freq = sum(freq), terms_per_emotion = .N), 
+                                by = c("emotion", "country")]
 
 
 ```
