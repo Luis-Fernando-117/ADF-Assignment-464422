@@ -350,32 +350,32 @@ term.frequency.ecuador.president$president <- "Ecuador"
 term.frequency.elsalvador.president         <- umodel.presidents.filtered %>% 
                                               filter(doc_id == "El Salvador")
 term.frequency.elsalvador.president         <- txt_freq(term.frequency.elsalvador.president$token)
-term.frequency.elsalvador.president$president <- "Ecuador"
+term.frequency.elsalvador.president$president <- "El Salvador"
 ```
 
 ```{r}
 # Merging presidents frequnecies 
 presidents.term.frequencies <- rbind(term.frequency.mexico.president, term.frequency.chile.president)
 presidents.term.frequencies <- rbind(presidents.term.frequencies,term.frequency.ecuador.president)
-presidents.term.frequencies <- rbind(presidents.term.frequencies,term.frequency.elsalvador.president )
+presidents.term.frequencies <- rbind(presidents.term.frequencies,term.frequency.elsalvador.president)
 ```
 
 ```{r}
 # Joing the emtion to the words
-emotion.score.presidents <- left_join(presidents.term.frequencies, spanish_emotions, by = "key")
-emotion.score.presidents <-  as.data.table(na.omit(emotion.score.presidents))
-emotion.score.presidents <- emotion.score.presidents[ ,list(tot_freq = sum(freq), 
-                                                      terms_per_emotion = .N), 
+sentiment.score.presidents <- left_join(presidents.term.frequencies, spanish_emotions, by = "key")
+sentiment.score.presidents <-  as.data.table(na.omit(sentiment.score.presidents))
+sentiment.score.presidents <- sentiment.score.presidents[ ,list(tot_freq = sum(freq), 
+                                                      terms_per_sentiment = .N), 
                                                       by = c("emotion", "president")]
 ```
 
 ```{r}
 # Stacked bar chart
-emotions_presidents_stacked_plot <- ggplot(emotion.score.presidents, 
+sentiment_presidents_stacked_plot <- ggplot(sentiment.score.presidents, 
                                 aes(fill=president, y=tot_freq, x=emotion)) + 
                                 geom_bar(position="stack", stat="identity")
 
-emotions_stacked_plot
+sentiment_presidents_stacked_plot
 ```
 
 Compare the plots
