@@ -136,9 +136,11 @@ ggplot(presidents.stats) + geom_col(aes(x = screen_name, y = avg_retweets))
 
 ## Text Mining
 
-Given that the tweets we will analyze are in spanish language, we will use a publicly available Natural Language Processing (NLP) package for R, called UDPipe. This package wi
+Given that the tweets we will analyze are in spanish language, we will use a publicly available Natural Language Processing (NLP) package for R, called "UDPipe". This package has over 65 different languages available that allow to do advances text mining analyses. 
 
-## Analysis of followers tweets
+In this section, the text frequencies of the tweets will be computed.
+
+To start the analysis, the "Udpipie" package needs to be installed and loaded. Then we proceed to specifying our NLP model and defining the language. In this case, as the tweets we are analyzing were filtered to be in Spanish, we specify this for out NLP model.
 
 Define the language of the analysis and download model
 ```{r}
@@ -146,8 +148,12 @@ udmodel <- udpipe_download_model(language = "spanish")
 udmodel
 ```
 
-Deploy the package to tokenise, and tag terms in all the tweets from presidents
-followers
+## Analysis of followers tweets
+
+Deploy the package in the data frames that contain the presidents followers tweets.
+This will take every tweet, and create a different row for every word and character that appears in the tweet. For every word (token), additional information of that token is added. Relevant for this analysis is the "upos" column, which tells us what type of word is it, for instance, a verb, adjective, pronoun and so on.
+
+We proceed to deploy the model into all the presidents followers tweets individually
 ```{r}
 udmodel.obrador.followers        <- udpipe(x = text.tweets.obrador.followers$text, 
                                     object = udmodel)
@@ -167,29 +173,30 @@ udmodel.bukele.followers$doc_id  <- "El_Salvador_followers"
 
 ```
 
-Merge them into a single data frame to then filter more easily
+Then the dataframes are combinedinto a single data frame to then filter more easily later on
 ```{r}
 umodel.presidents.followers <- rbind(udmodel.obrador.followers, udmodel.pinera.followers)
 umodel.presidents.followers <- rbind(umodel.presidents.followers,udmodel.lenin.followers)
 umodel.presidents.followers <- rbind(umodel.presidents.followers,udmodel.bukele.followers)
+head(umodel.presidents.followers)
 ```
 
-Filter the data frames to exclude stop words, punctuation and symbols
-
-To check the definitions of the upos categories, check
-https://universaldependencies.org/u/pos/index.html
+As we can see, there are a lot of punctuation signs, delimiters, conjunctions and other words which are not relevant to look at. Thus, we filter to only include adjectives and nouns.
+Also, by using pattern matching we can exclude all words that are mentions to other people by excluding words that have an "@" symbol.
 
 ```{r}
 umodel.presidents.followers.filtered <- filter(umodel.presidents.followers,
-                                               upos == "ADJ" | upos == "NOUN" |
-                                               upos == "PROPN" | upos == "INTJ")
+                                               upos == "ADJ" | upos == "NOUN")
 umodel.presidents.followers.filtered <- filter(umodel.presidents.followers.filtered,
                                                !grepl("@", token))
 ```
+To check the definitions of the upos categories, check
+https://universaldependencies.org/u/pos/index.html
+
+Now that we have the relevant terms, we can proceed to calculate the text frequency
+
 
 Term Frequency of followers tweets
---> fix this since we pasted all into a single df
--- need to filter rows that belong to each president and do text frequency
 ```{r}
 # Mexico
 term.frequency.mexico.followers <- umodel.presidents.followers.filtered %>% 
@@ -218,25 +225,35 @@ term.frequency.elsalvador.followers$country <- "El_Savador"
 ```
 
 Visualize top 20 terms used by presidents followers 
+
 ```{r}
 # Mexico
 factor(term.frequency.mexico.followers$key, 
                     levels = rev(term.frequency.mexico.followers$key))
       barchart(key ~ freq, data = head(term.frequency.mexico.followers, 20), col = "cadetblue", 
          main = "Most occurring terms", xlab = "Freq")
+```
 
+
+```{r}
 # Chile
 factor(term.frequency.chile.followers$key, 
                     levels = rev(term.frequency.chile.followers$key))
 barchart(key ~ freq, data = head(term.frequency.chile.followers, 20), col = "cadetblue", 
          main = "Most occurring terms", xlab = "Freq")
+```
 
+
+```{r}
 # Ecuador
 factor(term.frequency.ecuador.followers$key, 
                     levels = rev(term.frequency.ecuador.followers$key))
 barchart(key ~ freq, data = head(term.frequency.ecuador.followers, 20), col = "cadetblue", 
          main = "Most occurring terms", xlab = "Freq")
+```
 
+
+```{r}
 # El Salvador
 factor(term.frequency.elsalvador.followers$key, 
                     levels = rev(term.frequency.elsalvador.followers$key))
