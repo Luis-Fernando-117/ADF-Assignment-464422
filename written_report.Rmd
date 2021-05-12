@@ -59,6 +59,10 @@ Load Objects
   load("text.tweets.pinera.RData")
   load("text.tweets.lenin.RData")
   load("text.tweets.bukele.RData")
+  
+# Presidents Timelines
+  load("presidents.timelines.RData")
+
 ```
 
 
@@ -66,7 +70,7 @@ Load Objects
 
 ## Data visualizations
 
-Bind all the tweets texts into a single df
+Bind all the tweets texts into a single df -- change to data processing?
 ```{r}
 # For followers tweets
 df.tweets.visualization <- rbind(text.tweets.obrador.followers, text.tweets.pinera.followers)
@@ -103,9 +107,10 @@ We can also calculate some basics statistics of the timelines of the presidents
 ! I need to load the actual time lines from the "collect data" file
 ```{r}
 # Get some features out of the tmls data frame
-average_text_with <- mean(tmls$display_text_width)
-average_retweet_count <- mean(tmls$retweet_count)
+average_text_with     <- mean(presidents.timelines$display_text_width)
+average_retweet_count <- mean(presidents.timelines$retweet_count)
 
+# Grooup by president and get those calculations as well then display into a plot 
 ```
 
 

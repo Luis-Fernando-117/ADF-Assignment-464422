@@ -144,14 +144,26 @@ text.tweets.lenin$length <-
 text.tweets.bukele$length <- 
   sapply(strsplit(text.tweets.bukele$text, " "), length)
 
+# --- Merge presidents timelines into a single dataframe 
+presidents.timelines <- rbind(timeline.obrador, timeline.lenin)
+presidents.timelines <- rbind(presidents.timelines, timeline.pinera)
+presidents.timelines <- rbind(presidents.timelines, timeline.bukele)
+
+#########################
+# Save Objetcs for Report 
+#########################
+
+# Save president timelines 
+  save(presidents.timelines, file = "presidents.timelines.RData")
+
 # Save the tidy df's with tweets from presidents 
-save(text.tweets.obrador, file = "text.tweets.obrador.RData")
-save(text.tweets.pinera,  file = "text.tweets.pinera.RData")
-save(text.tweets.lenin,   file = "text.tweets.lenin.RData")
-save(text.tweets.bukele,  file = "text.tweets.bukele.RData")
+  save(text.tweets.obrador, file = "text.tweets.obrador.RData")
+  save(text.tweets.pinera,  file = "text.tweets.pinera.RData")
+  save(text.tweets.lenin,   file = "text.tweets.lenin.RData")
+  save(text.tweets.bukele,  file = "text.tweets.bukele.RData")
 
 # Save the tidy dataframes with tweets
-save(text.tweets.obrador.followers, file = "text.tweets.obrador.followers.RData")
-save(text.tweets.pinera.followers,  file = "text.tweets.pinera.followers.RData")
-save(text.tweets.lenin.followers,   file = "text.tweets.lenin.followers.RData")
-save(text.tweets.bukele.followers,  file = "text.tweets.bukele.followers.RData")
+  save(text.tweets.obrador.followers, file = "text.tweets.obrador.followers.RData")
+  save(text.tweets.pinera.followers,  file = "text.tweets.pinera.followers.RData")
+  save(text.tweets.lenin.followers,   file = "text.tweets.lenin.followers.RData")
+  save(text.tweets.bukele.followers,  file = "text.tweets.bukele.followers.RData")
